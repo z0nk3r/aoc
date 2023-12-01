@@ -17,5 +17,6 @@ def treb(part):
 
     print(f"{part}: {answer = }")
 
-treb(1)
-treb(2)
+if __name__ == "__main__":
+    treb(1)
+    treb(2)
