@@ -90,12 +90,26 @@ def time_to_release(year, day):
     return release_time - now
 
 def download_input_when_live(year, day):
-    # Download 3 seconds after release
-    to_wait = time_to_release(year, day) + datetime.timedelta(seconds=3)
-    to_wait_seconds = to_wait.total_seconds()
-    if to_wait_seconds > 0:
-        print(f'Waiting {to_wait_seconds} Seconds until Puzzle is Available...')
-        time.sleep(to_wait_seconds)
+    # Download 2 seconds after release
+    to_wait = time_to_release(year, day) + datetime.timedelta(seconds=2)
+    to_wait_seconds = int(to_wait.total_seconds())
+    print(f'\r [X] {int(to_wait_seconds/60):4} Minutes until Puzzle is Available. Waiting... ', end="", flush=True)
+
+    while to_wait_seconds > 180:
+        time.sleep(1)
+        to_wait_seconds -= 1
+        if (to_wait_seconds % 60) == 0:  # every minute
+            print(f'\r [X] {int(to_wait_seconds/60):4} Minutes until Puzzle is Available. Waiting... ', end="", flush=True)
+            
+            # repeat these here for potential drift of time
+            to_wait = time_to_release(year, day) + datetime.timedelta(seconds=2)
+            to_wait_seconds = int(to_wait.total_seconds())
+        
+    while to_wait_seconds > 0:
+        time.sleep(1)
+        to_wait_seconds -= 1
+        print(f'\r [!] {int(to_wait_seconds):3} Seconds until Puzzle is Available. Waiting... ', end="", flush=True)
+
     print(f'Downloading Puzzle Input for {year} Day {day} to ', end="")
     print(f'\"{os.getcwd()}/{year}/{day:02}/input\"')
     get_input(year, day)
