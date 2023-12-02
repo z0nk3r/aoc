@@ -11,10 +11,10 @@ def get_maxes(games):
 def part1(lines):
     answer = 0
     for line in lines:
-        id = int(line.split(": ")[0].split(" ")[1])
+        g_id = int(line.split(": ")[0].split(" ")[1])
         r, g, b = get_maxes(line.split(": ")[1].split(";"))  # [games]
         if (r <= 12 and g <= 13 and b <= 14):
-            answer += id
+            answer += g_id
     print(f"1: {answer = }")
 
 def part2(lines):
