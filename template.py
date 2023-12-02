@@ -1,17 +1,13 @@
 def part1():
-    with open("../input") as input:
-        lines = [line.replace("\n", "") for line in input.readlines()]
-        
     for line in lines:
         pass
 
-def part2():
-    with open("../input") as input:
-        lines = [line.replace("\n", "") for line in input.readlines()]
-        
+def part2(lines):
     for line in lines:
         pass
 
 if __name__ == "__main__":
-    part1()
-    part2()
+    with open("../input") as input:
+        lines = [line.replace("\n", "") for line in input.readlines()]
+    part1(lines)
+    part2(lines)

@@ -9,7 +9,7 @@ def get_maxes(games):
     return maxes["red"], maxes["green"], maxes["blue"]
 
 def main():
-    with open("../input") as input:
+    with open("input") as input:
         lines = [line.replace("\n", "") for line in input.readlines()]
 
     ans_1 = ans_2 = 0

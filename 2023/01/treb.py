@@ -1,5 +1,5 @@
 def treb(part):
-    with open("../input") as input:
+    with open("input") as input:
         lines = [x.replace("\n", "") for x in input.readlines()]
     
     answer = 0

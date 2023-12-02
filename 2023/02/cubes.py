@@ -26,7 +26,7 @@ def part2(lines):
     print(f"2: {answer = }")
 
 if __name__ == "__main__":
-    with open("../input") as input:
+    with open("input") as input:
         lines = [line.replace("\n", "") for line in input.readlines()]
     part1(lines)
     part2(lines)
