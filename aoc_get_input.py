@@ -109,7 +109,7 @@ def download_input_when_live(year, day):
         
         if (to_wait_seconds % 300) == 0:  # every 5 minutes
             # repeat these here for potential drift of time
-            to_wait = time_to_release(year, day) + datetime.timedelta(seconds=2)
+            to_wait = time_to_release(year, day) + datetime.timedelta(seconds=4)
             to_wait_seconds = int(to_wait.total_seconds())
 
     print(f'Downloading Puzzle Input for {year} Day {day} to ', end="")
