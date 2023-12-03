@@ -90,32 +90,28 @@ def time_to_release(year, day):
     return release_time - now
 
 def download_input_when_live(year, day):
-    # Download 2 seconds after release
-    to_wait = time_to_release(year, day) + datetime.timedelta(seconds=2)
+    # Download 4 seconds after release
+    to_wait = time_to_release(year, day) + datetime.timedelta(seconds=4)
     to_wait_seconds = int(to_wait.total_seconds())
     days = int(to_wait_seconds//86400)
     hrs = int((to_wait_seconds - (days*86400))//3600)
     mins = int((to_wait_seconds - (days*86400) - (hrs*3600))//60)
-    print(f'\r [X] {days:4} Days, {hrs:02} Hrs, {mins:02} Mins until Puzzle is Available. Waiting... ', end="", flush=True)
+    secs = int((to_wait_seconds - (days*86400) - (hrs*3600) - mins*60))
+    print(f'\r [X] {days:4}D, {hrs:02}H, {mins:02}M, {secs:02}S until Puzzle is Available. Waiting... ', end="", flush=True)
 
-    while to_wait_seconds > 180:
-        time.sleep(1)
-        to_wait_seconds -= 1
-        if (to_wait_seconds % 60) == 0:  # every minute
-            days = int(to_wait_seconds//86400)
-            hrs = int((to_wait_seconds - (days*86400))//3600)
-            mins = int((to_wait_seconds - (days*86400) - (hrs*3600))//60)
-            print(f'\r [X] {days:4} Days, {hrs:02} Hrs, {mins:02} Mins until Puzzle is Available. Waiting... ', end="", flush=True)
-        
-        if (to_wait_seconds % 600) == 0:  # every 10 minutes
-            # repeat these here for potential drift of time
-            to_wait = time_to_release(year, day) + datetime.timedelta(seconds=2)
-            to_wait_seconds = int(to_wait.total_seconds())
-        
     while to_wait_seconds > 0:
         time.sleep(1)
         to_wait_seconds -= 1
-        print(f'\r [!] {int(to_wait_seconds):3} Seconds until Puzzle is Available. Waiting...                  ', end="", flush=True)
+        days = int(to_wait_seconds//86400)
+        hrs = int((to_wait_seconds - (days*86400))//3600)
+        mins = int((to_wait_seconds - (days*86400) - (hrs*3600))//60)
+        secs = int((to_wait_seconds - (days*86400) - (hrs*3600) - mins*60))
+        print(f'\r [X] {days:4}D, {hrs:02}H, {mins:02}M, {secs:02}S until Puzzle is Available. Waiting... ', end="", flush=True)
+        
+        if (to_wait_seconds % 300) == 0:  # every 5 minutes
+            # repeat these here for potential drift of time
+            to_wait = time_to_release(year, day) + datetime.timedelta(seconds=2)
+            to_wait_seconds = int(to_wait.total_seconds())
 
     print(f'Downloading Puzzle Input for {year} Day {day} to ', end="")
     print(f'\"{os.getcwd()}/{year}/{day:02}/input\"')
