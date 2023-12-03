@@ -89,24 +89,23 @@ def time_to_release(year, day):
     now = datetime.datetime.now(dateutil.tz.tzutc())
     return release_time - now
 
-def download_input_when_live(year, day):
-    # Download 4 seconds after release
-    to_wait = time_to_release(year, day) + datetime.timedelta(seconds=4)
-    to_wait_seconds = int(to_wait.total_seconds())
+def print_countdown(to_wait_seconds):
     days = int(to_wait_seconds//86400)
     hrs = int((to_wait_seconds - (days*86400))//3600)
     mins = int((to_wait_seconds - (days*86400) - (hrs*3600))//60)
     secs = int((to_wait_seconds - (days*86400) - (hrs*3600) - mins*60))
     print(f'\r [X] {days:4}D, {hrs:02}H, {mins:02}M, {secs:02}S until Puzzle is Available. Waiting... ', end="", flush=True)
 
+def download_input_when_live(year, day):
+    # Download 4 seconds after release
+    to_wait = time_to_release(year, day) + datetime.timedelta(seconds=4)
+    to_wait_seconds = int(to_wait.total_seconds())
+    print_countdown(to_wait_seconds)
+
     while to_wait_seconds > 0:
         time.sleep(1)
         to_wait_seconds -= 1
-        days = int(to_wait_seconds//86400)
-        hrs = int((to_wait_seconds - (days*86400))//3600)
-        mins = int((to_wait_seconds - (days*86400) - (hrs*3600))//60)
-        secs = int((to_wait_seconds - (days*86400) - (hrs*3600) - mins*60))
-        print(f'\r [X] {days:4}D, {hrs:02}H, {mins:02}M, {secs:02}S until Puzzle is Available. Waiting... ', end="", flush=True)
+        print_countdown(to_wait_seconds)
         
         if (to_wait_seconds % 300) == 0:  # every 5 minutes
             # repeat these here for potential drift of time
