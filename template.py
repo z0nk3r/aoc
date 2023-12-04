@@ -1,4 +1,4 @@
-def part1():
+def part1(lines):
     for line in lines:
         pass
 

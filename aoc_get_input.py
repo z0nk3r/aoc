@@ -100,7 +100,6 @@ def download_input_when_live(year, day):
     # Download 4 seconds after release
     to_wait = time_to_release(year, day) + datetime.timedelta(seconds=4)
     to_wait_seconds = int(to_wait.total_seconds())
-    print_countdown(to_wait_seconds)
 
     while to_wait_seconds > 0:
         time.sleep(1)
