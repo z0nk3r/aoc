@@ -5,7 +5,7 @@ def quadr(b, c):
     return b - lower - lower - 1
 
 def main():
-    lines = [line.replace("\n", "") for line in open(0).readlines()]
+    lines = open(0).read().split("\n")
 
     times = list(map(int, lines[0].split(":")[1].split()))
     time = int("".join(lines[0].split(":")[1].split()))

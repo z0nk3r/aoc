@@ -7,6 +7,7 @@ def part2(lines):
         pass
 
 if __name__ == "__main__":
-    lines = [line.replace("\n", "") for line in open(0).readlines()]
+    lines = open(0).read().split("\n")
+
     part1(lines)
     part2(lines)
