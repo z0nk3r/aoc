@@ -34,7 +34,7 @@ def part2(lines):
         maps[src] = dests
         
     ans2 = 0
-    currs = ["AAA", "PRA", "PVA", "XLA", "PTA", "FBA"]
+    currs = [curr for curr in maps.keys() if curr.endswith("A")]
     curr_count = [0, 0, 0, 0, 0, 0]
     for idx, curr in enumerate(currs):
         ctr = 0
