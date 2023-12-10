@@ -4,10 +4,13 @@ GREEN = "\033[0;32m"
 BLUE = "\033[1;94m"
 DARK_GRAY = "\033[1;30m"
 END = "\033[0m"
-SLEEP_VAR = 0.001
+SLEEP_VAR = 0.0005
 
 def part1(matrix):
-    charmap = {'-': '═', '|': '║', 'F': '╔', '7': '╗', 'L': '╚', 'J': '╝', '.': ' ', 'S': 'S'}
+    # charmap1 = {'-': '─', '|': '│', 'F': '┌', '7': '┐', 'L': '└', 'J': '┘', '.': ':', 'S': 'S'}
+    # charmap2 = {'-': '━', '|': '┃', 'F': '┏', '7': '┓', 'L': '┗', 'J': '┛', '.': ':', 'S': 'S'}
+    # charmap2 = {'-': '═', '|': '║', 'F': '╔', '7': '╗', 'L': '╚', 'J': '╝', '.': '.', 'S': 'S'}
+    charmap1 = charmap2 = {'-': '─', '|': '│', 'F': '╭', '7': '╮', 'L': '╰', 'J': '╯', '.': ' ', 'S': 'S'}
     tot_row = 0
     # clearscreen
     print("\033[2J\033[;H")
@@ -17,8 +20,8 @@ def part1(matrix):
     for ridx, row in enumerate(matrix):
         tot_row += 1
         for cidx, col in enumerate(row):
-            # print(f"{DARK_GRAY}{charmap[matrix[ridx][cidx]]}{END}", end='', flush=True)
-            print(f"{DARK_GRAY}{matrix[ridx][cidx]}{END}", end='', flush=True)
+            print(f"{DARK_GRAY}{charmap1[matrix[ridx][cidx]]}{END}", end='', flush=True)
+            # print(f"{DARK_GRAY}{matrix[ridx][cidx]}{END}", end='', flush=True)
             if col == "S":
                 st_row = ridx
                 st_col = cidx
@@ -56,28 +59,28 @@ def part1(matrix):
         curr = matrix[curr_r][curr_c]
         if curr != "S":
             print(f"\033[{curr_r+2};{curr_c+1}H", end="", flush=True)
-            # print(f"{RED}{charmap[curr]}{END}", end="", flush=True)
-            print(f"{RED}{curr}{END}", end="", flush=True)
+            print(f"{RED}{charmap2[curr]}{END}", end="", flush=True)
+            # print(f"{RED}{curr}{END}", end="", flush=True)
 
             time.sleep(SLEEP_VAR)
             if idx > 1:
                 (curr_r, curr_c) = path[idx-1]
                 curr = matrix[curr_r][curr_c]
                 print(f"\033[{curr_r+2};{curr_c+1}H", end="", flush=True)
-                # print(f"{GREEN}{charmap[curr]}{END}", end="", flush=True)
-                print(f"{GREEN}{curr}{END}", end="", flush=True)
+                print(f"{GREEN}{charmap2[curr]}{END}", end="", flush=True)
+                # print(f"{GREEN}{curr}{END}", end="", flush=True)
 
     # fix second to last for viz
     end_r, end_c = path[-2]
     print(f"\033[{end_r+2};{end_c+1}H", end="", flush=True)
-    # print(f"{GREEN}{charmap[matrix[end_r][end_c]]}{END}", end="", flush=True)
-    print(f"{GREEN}{matrix[end_r][end_c]}{END}", end="", flush=True)
+    print(f"{GREEN}{charmap2[matrix[end_r][end_c]]}{END}", end="", flush=True)
+    # print(f"{GREEN}{matrix[end_r][end_c]}{END}", end="", flush=True)
 
     # furthest point from the start
     end_r, end_c = path[-1]
     print(f"\033[{end_r+2};{end_c+1}H", end="", flush=True)
-    # print(f"{RED}{charmap[matrix[end_r][end_c]]}{END}", end="", flush=True)
-    print(f"{RED}{matrix[end_r][end_c]}{END}", end="", flush=True)
+    print(f"{RED}{charmap2[matrix[end_r][end_c]]}{END}", end="", flush=True)
+    # print(f"{RED}{matrix[end_r][end_c]}{END}", end="", flush=True)
 
     # showcursor
     print("\033[?25h", end="")
