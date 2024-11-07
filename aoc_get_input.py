@@ -111,7 +111,7 @@ def download_input_when_live(year, day):
             to_wait = time_to_release(year, day) + datetime.timedelta(seconds=4)
             to_wait_seconds = int(to_wait.total_seconds())
 
-    print(f'Downloading Puzzle Input for {year} Day {day} to ', end="")
+    print(f'\nDownloading Puzzle Input for {year} Day {day} to ', end="")
     print(f'\"{os.getcwd()}/{year}/{day:02}/input\"')
     get_input(year, day)
 
