@@ -1,11 +1,12 @@
+import datetime
 import os
 import sys
 import time
-import requests
-import datetime
-import dateutil.tz
-
+import webbrowser
 from typing import Tuple
+
+import dateutil.tz
+import requests
 
 # ported from https://github.com/morgoth1145/advent-of-code/blob/8c17e50b4067d00a5ccc0753b1a0a7289e3f20e5/lib/aoc.py
 
@@ -125,6 +126,9 @@ def setup_env(year: str, day: str) -> None:
 
     # open dest_path/dest_file with `code -r`
 
+    # open the site
+    webbrowser.open(f"https://adventofcode.com/{year}/day/{day}")
+
 
 def time_to_release(year: str, day: str) -> datetime.datetime:
     """Calculates the time to release of the requested puzzle on (year) and (day)"""
@@ -176,9 +180,23 @@ def autocalc_yearday() -> Tuple[int, int]:
     if its after dec 25th, return next year and 1.
     Otherwise, return current year, current day + 1.
     """
+    year = -2
+    day = -2
 
-    # [ ] TODO: Use the Datetime.datetime lib; placeholder retvals until complete
-    return 2024, 1
+    now = datetime.datetime.now(dateutil.tz.tzutc()) + datetime.timedelta(hours=-5)
+    if now.month < 12:
+        year = now.year
+        day = 1
+
+    elif now.month == 12 and day >= 25:
+        year = now.year + 1
+        day = 1
+
+    else:
+        year = now.year
+        day = now.day + 1
+
+    return year, day
 
 
 def print_usage() -> None:
@@ -193,6 +211,9 @@ def main() -> None:
     try:
         if sys.argv[1] == "-a":
             year, day = autocalc_yearday()
+            if year == -2 or day == -2:
+                print("[x] Automagic datecalc failed.")
+                return
         elif len(sys.argv) != 3:
             print("[x] Not all or too many arguments provided")
             print_usage()
