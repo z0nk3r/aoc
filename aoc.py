@@ -1,10 +1,11 @@
 import datetime
 import os
+import re
 import shutil
 import sys
 import time
 import webbrowser
-from typing import Tuple
+from typing import Tuple, Union
 
 import dateutil.tz
 import requests
@@ -36,6 +37,23 @@ def load_cookie(_s: requests.Session, bad: bool) -> None:
     with open(cookie_file) as cfile:
         rcookie = cfile.readline().rstrip("\n")
     _s.cookies["session"] = rcookie
+
+
+def reload_cookie(_s: requests.Session) -> None:
+    forget_cookie()
+    load_cookie(_s, True)
+    time.sleep(2)  # avoid potential rate limit
+
+
+def setup_session() -> requests.Session:
+    _s = requests.Session()
+
+    username = load_username()
+    _s.headers.update({"User-Agent": f"github.com/{username}"})
+
+    load_cookie(_s, False)
+    
+    return _s
 
 
 def load_username() -> str:
@@ -93,19 +111,13 @@ def get_input(year: str, day: str) -> bool:
     if not os.path.exists(f"{year}/{day:02}"):
         os.makedirs(f"{year}/{day:02}")
 
-    _s = requests.Session()
-
-    username = load_username()
-    _s.headers.update({"User-Agent": f"github.com/{username}"})
-
-    load_cookie(_s, False)
+    _s = setup_session()
+    
     bad_counter = 0
     while not session_get_file(_s, dest_path, url):
         # The session cookie may be invalid?
         os.unlink(dest_path)  # delete file
-        forget_cookie()
-        load_cookie(_s, True)
-        time.sleep(2)  # avoid potential rate limit
+        reload_cookie()
         bad_counter += 1
         if bad_counter == 5:
             print("[x] Bad Puzzle Input Get - Try Again Later")
@@ -121,7 +133,9 @@ def setup_env(year: str, day: str) -> None:
     print(f'[-] Setting up environment for challenge in "./{year}/{day:02}/"')
 
     # os.copy template down to dest_path
-    shutil.copy("template.py", f"{dest_path}/{dest_file}")
+    if not os.path.exists(f"{dest_path}/{dest_file}"):
+        shutil.copy("template.py", f"{dest_path}/{dest_file}")
+        # [ ] auto regex replace year and day variables in the template file once copied down
 
     # open puzzle and working file with `code -r`
     os.system(f"code -r {dest_path}/{dest_file}")
@@ -142,14 +156,14 @@ def time_to_release(year: str, day: str) -> datetime.datetime:
     return release_time - now
 
 
-def print_countdown(to_wait_seconds: int) -> None:
+def print_countdown(to_wait_seconds: int, message: str) -> None:
     """Takes the time to release (to_wait_seconds) and prints the associated countdown to the terminal"""
     days = int(to_wait_seconds // 86400)
     hrs = int((to_wait_seconds - (days * 86400)) // 3600)
     mins = int((to_wait_seconds - (days * 86400) - (hrs * 3600)) // 60)
     secs = int((to_wait_seconds - (days * 86400) - (hrs * 3600) - mins * 60))
     print(
-        f"\r [x] {days:4}D, {hrs:02}H, {mins:02}M, {secs:02}S until Puzzle is Available. Waiting... ",
+        f"\r [x] {days:4}D, {hrs:02}H, {mins:02}M, {secs:02}S until {message}. Waiting... ",
         end="",
         flush=True,
     )
@@ -166,7 +180,7 @@ def download_input_when_live(year: str, day: str) -> None:
     while to_wait_seconds > 0:
         time.sleep(1)
         to_wait_seconds -= 1
-        print_countdown(to_wait_seconds)
+        print_countdown(to_wait_seconds, "Puzzle is Available")
 
         # recalc the waittime every so often to account for potential drift of time
         if (to_wait_seconds % 300) == 0:  # every 5 minutes
@@ -204,6 +218,59 @@ def print_usage() -> None:
     """Print the Usage/how-to line"""
     print("\nUsage:\n  $> python3 aoc.py [<year> <day>] [-a]\n")
 
+
+def submit_answer(year, day, part, answer) -> Tuple[bool, Union[str, None]]:
+    
+    _s = setup_session()
+    
+    url = f'https://adventofcode.com/{year}/day/{day}/answer'
+    r = _s.post(url, data={'level': part, 'answer': str(answer)})
+    r.raise_for_status()
+    
+    if day == 25 and part == 2:
+        return True, None
+
+    TOO_RECENT_KEY = 'You gave an answer too recently'
+    BAD_ANSWER_KEYS = ["That's not the right answer",
+                       "You don't seem to be solving the right level"]
+    GOOD_ANSWER_KEY = "That's the right answer!"
+    for line in r.text.splitlines():
+        if GOOD_ANSWER_KEY in line:
+            print(line)
+            return True, line # Good answer
+        if TOO_RECENT_KEY in line:
+            print(line)
+            assert(False)
+        for k in BAD_ANSWER_KEYS:
+            if k in line:
+                print(line)
+                return False, line
+
+    print('Bad request!')
+    assert(False)
+
+
+def aoc_timeout(answer_line: str) -> None:
+    m = re.search('Please wait (.*) before trying again', answer_line)
+    if m is None:
+        print('Warning: Cannot detect timeout from answer line. Defaulting to 1 minute.')
+        timeout = datetime.timedelta(minutes=1)
+    else:
+        timeout = {'one minute': datetime.timedelta(minutes=1),
+                    '5 minutes': datetime.timedelta(minutes=5)}.get(m.group(1))
+        if timeout is None:
+            print(f'Warning: Cannot detect timeout from "{m.group(1)}". Defaulting to 1 minute.')
+            timeout = datetime.timedelta(minutes=1)
+        else:
+            print(f'Timeout of {timeout} due to bad answer...')
+
+    timeout_until = datetime.datetime.now(dateutil.tz.tzutc()) + timeout
+    timeout_seconds = int(timeout_until.total_seconds())
+    
+    while timeout_seconds > 0:
+        time.sleep(1)
+        timeout_seconds -= 1
+        print_countdown(timeout_seconds, "Timeout is Over")
 
 def main() -> None:
     year = -1
