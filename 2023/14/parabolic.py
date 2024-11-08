@@ -118,7 +118,7 @@ def part2(grid):
             if grid[ridx][cidx] == "O":
                 total += len(grid) - ridx
         
-    print(f"2: {total}")
+    print(f"2: {total}") # 88371
 
 if __name__ == "__main__":
     lines = [line.replace("\n", "") for line in open(0).readlines()]

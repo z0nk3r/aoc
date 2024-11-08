@@ -109,10 +109,8 @@ def part2(lines):
                             pass
                 
                 if len(curr_neighs) == 2:
-                    print(f"{curr_neighs = }")
                     ans2 += (list(curr_neighs)[0] * list(curr_neighs)[1])
 
-    
     print(f"{ans2 = }")
 
 
