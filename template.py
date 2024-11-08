@@ -53,4 +53,4 @@ if __name__ == "__main__":
         print(f"[-] Solving Part 2 for {year} {day}")
         part2(lines, year, day)
     else:
-        print(f"You already have the stars for {year} {day}!")
+        print(f"You already have all of the stars for {year} {day}!")

@@ -213,11 +213,11 @@ def eval_answer(year: int, day: int, part: int, answer: int) -> None:
     b_submit, response = _submit_answer(year, day, part, answer)
     if b_submit:
         os.system(f"touch .part{part}solved")
-        print(f"{part}. {answer} - {response}")
+        print(f"{part}. {answer} - Correct! {'⭐' * int(part)}")
     else:
         if "already complete it" in response:
             os.system(f"touch .part{part}solved")
-            print("You already have this star!")
+            print(f"[!] You already have this star! {'⭐'*int(part)}")
         print(f"{part} - {answer} was incorrect.")
         _aoc_timeout(response)
         print("\n")
