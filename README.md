@@ -2,28 +2,6 @@
 
 Repo for all of my Advent of Code solutions and my tools. Solutions are sorted by year and day in their respective folders.
 
-Generally, the workflow to solve a problem is as follows:
-
-- `cd <root-dir>`
-- `python3 aoc.py -a`
-    - puzzle will download, template will copy down to `<year>/<day>` dir
-    - vscode will open working file `day<day>.py` and puzzle `input`
-    - puzzle website will open in most-recently-used browser window
-- `cd <year>/<day>`
-- edit `day<day>.py` part1
-    - `python3 day<day>.py < input`
-    - answer autosubmits
-    - repeat/rework until correct
-
-- edit `day<day>.py` part2
-    - `python3 day<day>.py < input`
-    - answer for part2 autosubmits
-    - repeat/rework until correct
-
-- `cd ../..` (back to the root-dir)
-- `python3 aoc.py -a` (to sit in countdown and wait for the next days problem)
-
-
 # Puzzle Auto-Grabber
 
 Puzzle Auto-Grabber (`aoc.py`) will automatically pull the puzzle provided by the arguments on the command line and put the puzzle into the corresponding folder. 
@@ -132,6 +110,29 @@ $> python3 aoc.py -a
  [x]   10D, 05H, 14M, 15S until Puzzle is Available. Waiting... 
 ```
 
+### Workflow
+Generally, the workflow to solve a problem is as follows:
+
+- `cd <root-dir>`
+- `python3 aoc.py -a`
+    - puzzle will download, template will copy down to `<year>/<day>` dir
+    - vscode will open working file `day<day>.py` and puzzle `input`
+    - puzzle website will open in most-recently-used browser window
+- `cd <year>/<day>`
+- edit `day<day>.py` part1
+    - `python3 day<day>.py < input`
+    - answer autosubmits
+    - repeat/rework until correct
+
+- edit `day<day>.py` part2
+    - `python3 day<day>.py < input`
+    - answer for part2 autosubmits
+    - repeat/rework until correct
+
+- `cd ../..` (back to the root-dir)
+- `python3 aoc.py -a` (to sit in countdown and wait for the next days problem)
+
+
 # template
 
 A Python3 template (`template.py`) to solve each problem is also provided. The template supports auto submission of answers and will keep track of incorrect answers tried. 
@@ -200,4 +201,11 @@ if __name__ == "__main__":
 ```shell
  $> python3 day1.py < input
  $> cat input | python3 day1.py
+```
+
+If correctly solved, you should see an output similar to this:
+```shell
+[-] Solving Part 1 for 2023 1
+[-] Attempting answer of <answer> for 2023 01 - part 1
+[-] 1. <answer> - Correct! ⭐
 ```
