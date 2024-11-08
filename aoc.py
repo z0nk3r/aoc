@@ -97,7 +97,7 @@ def main() -> None:
             if year == -2 or day == -2:
                 print("[x] Automagic datecalc failed.")
                 return
-            print(f"[!]Auto-Grabber: Next Puzzle is {year} {day:02}")
+            print(f"[!] Auto-Grabber: Next Puzzle is {year} {day:02}")
         elif len(sys.argv) != 3:
             print("[x] Not all or too many arguments provided")
             print_usage()
