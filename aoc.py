@@ -54,7 +54,6 @@ def setup_env(year: str, day: str) -> None:
     # os.copy template down to dest_path
     if not os.path.exists(f"{dest_path}/{dest_file}"):
         shutil.copy("template.py", f"{dest_path}/{dest_file}")
-        # [ ] auto regex replace year and day variables in the template file once copied down
 
     # open puzzle and working file with `code -r`
     os.system(f"code -r {dest_path}/{dest_file}")
@@ -98,6 +97,7 @@ def main() -> None:
             if year == -2 or day == -2:
                 print("[x] Automagic datecalc failed.")
                 return
+            print(f"[!]Auto-Grabber: Next Puzzle is {year} {day:02}")
         elif len(sys.argv) != 3:
             print("[x] Not all or too many arguments provided")
             print_usage()

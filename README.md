@@ -2,6 +2,27 @@
 
 Repo for all of my Advent of Code solutions and my tools. Solutions are sorted by year and day in their respective folders.
 
+Generally, the workflow to solve a problem is as follows:
+
+- `cd <root-dir>`
+- `python3 aoc.py -a`
+    - puzzle will download, template will copy down to `<year>/<day>` dir
+    - vscode will open working file `day<day>.py` and puzzle `input`
+    - puzzle website will open in most-recently-used browser window
+- `cd <year>/<day>`
+- edit `day<day>.py` part1
+    - `python3 day<day>.py < input`
+    - answer autosubmits
+    - repeat/rework until correct
+
+- edit `day<day>.py` part2
+    - `python3 day<day>.py < input`
+    - answer for part2 autosubmits
+    - repeat/rework until correct
+
+- `cd ../..` (back to the root-dir)
+- `python3 aoc.py -a` (to sit in countdown and wait for the next days problem)
+
 
 # Puzzle Auto-Grabber
 
@@ -58,10 +79,10 @@ See below for an example of the general structure:
 
 ## Setup
 There are two setup steps required:
-* Provide your username to include as part of the User-Agent in HTTP Requests, (`username.txt`) 
-* Get your individual Advent of Code account cookie (`cookie.txt`)
+* Provide your username to include as part of the User-Agent in HTTP Requests, (`lib/username.txt`) 
+* Get your individual Advent of Code account cookie (`lib/cookie.txt`)
 
-If you haven't completed these steps and you run the Auto-Grabber, you will be auto-prompted to manually retrieve/provide them.
+Typically, just run the Auto-Grabber. You will be auto-prompted to manually retrieve/provide the above setup items.
 ```shell
     Enter your username for the User-Agent string (Will cache locally, should only have to do this once)
 
@@ -78,6 +99,8 @@ If you haven't completed these steps and you run the Auto-Grabber, you will be a
 ```
 
 ## How to Use
+- For both the manual and automatic methods, run `aoc.py` from the root level directory (the dir you `git clone`-d down)
+
 ### Manual
 ```shell
 $> python3 aoc.py <year> <day>
@@ -91,7 +114,7 @@ will pull the puzzle input from the 1st of December, 2023 and place it in `./202
 If the year or day provided is in the future, a countdown will show instead:
 ```shell
 $> python3 aoc.py 2024 1
- [X]   10D, 05H, 14M, 15S until Puzzle is Available. Waiting... 
+ [x]   10D, 05H, 14M, 15S until Puzzle is Available. Waiting... 
 ```
 
 Once complete, you will be notified of the download of the puzzle input. If the download fails for any reason, an error will show and it will retry the download. If the download fails more than 5 times in a row, the script will exit, and you should try again later.
@@ -105,12 +128,15 @@ Once complete, you will be notified of the download of the puzzle input. If the 
 Using the `-a` option will automatically pull the current date and determine the next puzzle to download or wait for.
 ```shell
 $> python3 aoc.py -a
- [X]   10D, 05H, 14M, 15S until Puzzle is Available. Waiting... 
+[!] Auto-Grabber: Next Puzzle is 2024 01
+ [x]   10D, 05H, 14M, 15S until Puzzle is Available. Waiting... 
 ```
 
 # template
 
-A Python3 template (`template.py`) to solve each problem is also provided. The template supports auto submission of answers and will keep track of incorrect answers tried. See below:
+A Python3 template (`template.py`) to solve each problem is also provided. The template supports auto submission of answers and will keep track of incorrect answers tried. 
+
+See below:
 ```python import os
 import sys
 from pathlib import Path
