@@ -11,7 +11,7 @@ from lib import (
     reload_cookie,
     time_to_release,
     print_countdown,
-    autocalc_yearday
+    get_yearday,
 )
 
 # ported from https://github.com/morgoth1145/advent-of-code/blob/8c17e50b4067d00a5ccc0753b1a0a7289e3f20e5/lib/aoc.py
@@ -31,7 +31,7 @@ def get_puzzle(year: str, day: str) -> bool:
         os.makedirs(f"{year}/{day:02}")
 
     _s = setup_session()
-    
+
     bad_counter = 0
     while not session_get_file(_s, dest_path, url):
         # The session cookie may be invalid?
@@ -94,7 +94,7 @@ def main() -> None:
 
     try:
         if sys.argv[1] == "-a":
-            year, day = autocalc_yearday()
+            year, day = get_yearday()
             if year == -2 or day == -2:
                 print("[x] Automagic datecalc failed.")
                 return
