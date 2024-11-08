@@ -1,5 +1,6 @@
 import datetime
 import os
+import shutil
 import sys
 import time
 import webbrowser
@@ -84,8 +85,8 @@ def get_input(year: str, day: str) -> bool:
     url = f"https://adventofcode.com/{year}/day/{day}/input"
     dest_path = f"{year}/{day:02}/input"
 
-    print(f"\n[-] Downloading Puzzle Input for {year} Day {day} to ", end="")
-    print(f'"{os.getcwd()}/{year}/{day:02}/input"')
+    print(f"[-] Downloading Puzzle Input for {year} Day {day} to ", end="")
+    print(f'"./{year}/{day:02}/input"')
 
     if not os.path.exists(f"{year}"):
         os.makedirs(f"{year}")
@@ -115,16 +116,16 @@ def get_input(year: str, day: str) -> bool:
 
 def setup_env(year: str, day: str) -> None:
     """Makes a copy of the template into the current challenge's subdirectory and opens it in vscode"""
-    # [ ] TODO: Setup Working Environment Automagically with VSCode
     dest_path = f"{year}/{day:02}/"
     dest_file = f"day{day:02}.py"
-    print(f"[-] Setting up environment for challenge in {os.getcwd()}/{year}/{day:02}/")
+    print(f'[-] Setting up environment for challenge in "./{year}/{day:02}/"')
 
     # os.copy template down to dest_path
+    shutil.copy("template.py", f"{dest_path}/{dest_file}")
 
-    # rename template to destfile
-
-    # open dest_path/dest_file with `code -r`
+    # open puzzle and working file with `code -r`
+    os.system(f"code -r {dest_path}/{dest_file}")
+    os.system(f"code -r {dest_path}/input")
 
     # open the site
     webbrowser.open(f"https://adventofcode.com/{year}/day/{day}")
