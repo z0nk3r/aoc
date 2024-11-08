@@ -1,11 +1,13 @@
+import datetime
 import os
+import shutil
 import sys
 import time
-import requests
-import datetime
-import dateutil.tz
-
+import webbrowser
 from typing import Tuple
+
+import dateutil.tz
+import requests
 
 # ported from https://github.com/morgoth1145/advent-of-code/blob/8c17e50b4067d00a5ccc0753b1a0a7289e3f20e5/lib/aoc.py
 
@@ -83,8 +85,8 @@ def get_input(year: str, day: str) -> bool:
     url = f"https://adventofcode.com/{year}/day/{day}/input"
     dest_path = f"{year}/{day:02}/input"
 
-    print(f"\n[-] Downloading Puzzle Input for {year} Day {day} to ", end="")
-    print(f'"{os.getcwd()}/{year}/{day:02}/input"')
+    print(f"[-] Downloading Puzzle Input for {year} Day {day} to ", end="")
+    print(f'"./{year}/{day:02}/input"')
 
     if not os.path.exists(f"{year}"):
         os.makedirs(f"{year}")
@@ -114,16 +116,19 @@ def get_input(year: str, day: str) -> bool:
 
 def setup_env(year: str, day: str) -> None:
     """Makes a copy of the template into the current challenge's subdirectory and opens it in vscode"""
-    # [ ] TODO: Setup Working Environment Automagically with VSCode
     dest_path = f"{year}/{day:02}/"
     dest_file = f"day{day:02}.py"
-    print(f"[-] Setting up environment for challenge in {os.getcwd()}/{year}/{day:02}/")
+    print(f'[-] Setting up environment for challenge in "./{year}/{day:02}/"')
 
     # os.copy template down to dest_path
+    shutil.copy("template.py", f"{dest_path}/{dest_file}")
 
-    # rename template to destfile
+    # open puzzle and working file with `code -r`
+    os.system(f"code -r {dest_path}/{dest_file}")
+    os.system(f"code -r {dest_path}/input")
 
-    # open dest_path/dest_file with `code -r`
+    # open the site
+    webbrowser.open(f"https://adventofcode.com/{year}/day/{day}")
 
 
 def time_to_release(year: str, day: str) -> datetime.datetime:
@@ -176,9 +181,23 @@ def autocalc_yearday() -> Tuple[int, int]:
     if its after dec 25th, return next year and 1.
     Otherwise, return current year, current day + 1.
     """
+    year = -2
+    day = -2
 
-    # [ ] TODO: Use the Datetime.datetime lib; placeholder retvals until complete
-    return 2024, 1
+    now = datetime.datetime.now(dateutil.tz.tzutc()) + datetime.timedelta(hours=-5)
+    if now.month < 12:
+        year = now.year
+        day = 1
+
+    elif now.month == 12 and day >= 25:
+        year = now.year + 1
+        day = 1
+
+    else:
+        year = now.year
+        day = now.day + 1
+
+    return year, day
 
 
 def print_usage() -> None:
@@ -193,6 +212,9 @@ def main() -> None:
     try:
         if sys.argv[1] == "-a":
             year, day = autocalc_yearday()
+            if year == -2 or day == -2:
+                print("[x] Automagic datecalc failed.")
+                return
         elif len(sys.argv) != 3:
             print("[x] Not all or too many arguments provided")
             print_usage()
