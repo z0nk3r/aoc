@@ -144,11 +144,11 @@ def part2(matrix):
     matrix = [row.replace("S", list(s_list)[0]) for row in matrix]
     
     # remove any non-path pipechars to prevent directionality issues for in/out determination
-    matrix2 = ["".join(char if (ridx, cidx) in path else "." for cidx, char in enumerate(row)) for ridx, row in enumerate(matrix)]
+    matrix = ["".join(char if (ridx, cidx) in path else "." for cidx, char in enumerate(row)) for ridx, row in enumerate(matrix)]
 
     outside = set()
     
-    for ridx, row in enumerate(matrix2):
+    for ridx, row in enumerate(matrix):
         inside = False
         up = None
         for cidx, ch in enumerate(row):
@@ -169,7 +169,7 @@ def part2(matrix):
         for cidx, ch in enumerate(row):
             if (ridx, cidx) not in path and (ridx, cidx) not in outside:
                 print(f"\033[{ridx+2};{cidx+1}H", end="", flush=True)
-                print(f"{BLUE}{matrix[ridx][cidx]}{END}", end="", flush=True)
+                print(f"{BLUE}I{END}", end="", flush=True)
                 # time.sleep(SLEEP_VAR)
             # uncomment if not showing part1
             # elif (ridx, cidx) in path:
