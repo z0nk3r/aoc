@@ -3,7 +3,7 @@
 Repo for all of my Advent of Code solutions and my tools. Solutions are sorted by year and day in their respective folders.
 
 
-## Puzzle Auto-Grabber
+# Puzzle Auto-Grabber
 
 Puzzle Auto-Grabber (`aoc.py`) will automatically pull the puzzle provided by the arguments on the command line and put the puzzle into the corresponding folder. 
 Therefore, run this from the root level of your 'Advent of Code' folder. 
@@ -53,7 +53,7 @@ See below for an example of the general structure:
 └── template.py
 ```
 
-### Setup
+## Setup
 There are two setup steps required:
 * Provide your username to include as part of the User-Agent in HTTP Requests, (`username.txt`) 
 * Get your individual Advent of Code account cookie (`cookie.txt`)
@@ -74,7 +74,8 @@ If you haven't completed these steps and you run the Auto-Grabber, you will be a
     =>
 ```
 
-### How to Use - Manual
+## How to Use
+### Manual
 ```shell
 $> python3 aoc.py <year> <day>
 ```
@@ -97,13 +98,13 @@ Once complete, you will be notified of the download of the puzzle input. If the 
 [!] Download Complete!
 ```
 
-### How to Use - Automatic
+### Automatic
 Using the `-a` option will automatically pull the current date and determine the next puzzle to download or wait for.
 ```shell
 $> python3 aoc.py -a
 ```
 
-## template
+# template
 
 A Python3 template to solve each problem is also provided. See below:
 ```python 
