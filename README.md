@@ -5,7 +5,10 @@ Repo for all of my Advent of Code solutions and my tools. Solutions are sorted b
 
 ## Puzzle Auto-Grabber
 
-Puzzle Auto-Grabber (`aoc.py`) will automatically pull the puzzle provided by the arguments on the command line and put the puzzle into the corresponding folder. Therefore, run this from the root level of your 'Advent of Code' folder. Additionally, the provided `template.py` (see below), will auto copy down into the corresponding folder for your use.
+Puzzle Auto-Grabber (`aoc.py`) will automatically pull the puzzle provided by the arguments on the command line and put the puzzle into the corresponding folder. 
+Therefore, run this from the root level of your 'Advent of Code' folder. 
+
+Additionally, the provided `template.py` (see below), will auto copy down into the corresponding folder for your use. Once complete, the working file and the puzzle input will open in `vscode` and the puzzle text itself will open in your most recently-focused browser window.
 
 See below for an example of the general structure:
 ```shell
@@ -97,7 +100,7 @@ Once complete, you will be notified of the download of the puzzle input. If the 
 ### How to Use - Automatic
 Using the `-a` option will automatically pull the current date and determine the next puzzle to download or wait for.
 ```shell
-$> python3 aoc.py -a  # a for automagicks
+$> python3 aoc.py -a
 ```
 
 ## template
