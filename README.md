@@ -47,8 +47,11 @@ See below for an example of the general structure:
 │   ├── 24
 │   └── 25
 ├── aoc.py
-├── cookie.txt
-├── username.txt
+├── lib
+│   ├── __init__.py
+│   ├── cookie.txt
+│   ├── username.txt
+│   └── utils.py
 ├── README.md
 └── template.py
 ```
@@ -102,69 +105,52 @@ Once complete, you will be notified of the download of the puzzle input. If the 
 Using the `-a` option will automatically pull the current date and determine the next puzzle to download or wait for.
 ```shell
 $> python3 aoc.py -a
+ [X]   10D, 05H, 14M, 15S until Puzzle is Available. Waiting... 
 ```
 
 # template
 
 A Python3 template (`template.py`) to solve each problem is also provided. The template supports auto submission of answers and will keep track of incorrect answers tried. See below:
-```python 
-import os
+```python import os
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent.parent))
 
-from aoc import submit_answer, aoc_timeout
-
-
-def check_if_old_answer(part: int, answer: int) -> bool:
-    given_answers = [line.replace("\n", "") for line in open(f".part{part}tries").readlines()]
-    return answer in given_answers
-
-def add_to_bad_answers(part: int, answer: int):
-    with open(f".part{part}tries", "a") as given_answers:
-        given_answers.write(answer)
+from lib import eval_answer, get_yearday
 
 
-def eval_answer(year: int, day: int, part: int, answer: int) -> None:
-    if check_if_old_answer(part, answer):
-        print("[!] You already tried this answer!")
-        return
-    b_submit, response = submit_answer(year, day, part, answer)
-    if b_submit:
-        os.system(f"touch .part{part}solved")
-        print(f"{part}. {answer} - {response}")
-    else:
-        print(f"{part} - {answer} was incorrect.")
-        add_to_bad_answers(part, answer)
-        aoc_timeout(response)
-
-
-def part1(lines):
+def part1(lines, year, day):
+    answer = 0
+    
     for line in lines:
         pass
     
     '''
     solve part 1 of the problem here
+    # answer = <the answer to the problem>
     '''
     
-    # answer = <the answer to the problem>
     # eval_answer(year, day, 1, answer)
 
 
-def part2(lines):
+def part2(lines, year, day):
+    answer = 0
+    
     for line in lines:
         pass
     
-    
     '''
     solve part 2 of the problem here
+    # answer = <the answer to the problem>
     '''
     
-    # answer = <the answer to the problem>
-    # eval_answer(year, day, 2, answer)
+    eval_answer(year, day, 2, answer)
 
 
 if __name__ == "__main__":
-    # placeholders; update before running
-    year = -1
-    day = -1
+    year, day = get_yearday(os.getcwd())
+    if year == -2 or day == -2:
+        sys.exit(0)
     
     if not os.path.exists(".part1tries"):
         os.system("touch .part1tries")
@@ -174,11 +160,13 @@ if __name__ == "__main__":
     lines = [line.replace("\n", "") for line in open(0).readlines()]
 
     if not os.path.exists(".part1solved"):
+        print(f"[-] Solving Part 1 for {year} {day}")
         part1(lines, year, day)
     elif os.path.exists(".part1solved") and not os.path.exists(".part2solved"):
+        print(f"[-] Solving Part 2 for {year} {day}")
         part2(lines, year, day)
     else:
-        print("You already have these stars!")
+        print(f"You already have the stars for {year} {day}!")
 
 ```
 
