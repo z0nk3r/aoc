@@ -205,7 +205,11 @@ if __name__ == "__main__":
 
 If correctly solved, you should see an output similar to this:
 ```shell
-[-] Solving Part 1 for 2023 1
-[-] Attempting answer of <answer> for 2023 01 - part 1
-[-] 1. <answer> - Correct! ⭐
+user@hostname:~/aoc/2020/04 $ python3 day04.py < input
+[-] Attempting answer of 190 for 2020 04 - part 1
+[-] 1. 190 - Correct! ⭐
+user@hostname:~/aoc/2020/04 $ python3 day04.py < input
+[-] Solving Part 2 for 2020 4
+[-] Attempting answer of 121 for 2020 04 - part 2
+[-] 2. 121 - Correct! ⭐⭐
 ```
