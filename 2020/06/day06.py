@@ -5,32 +5,64 @@ sys.path.append(str(Path(__file__).parent.parent.parent))
 
 from lib import eval_answer, get_yearday
 
+from collections import Counter
 
 def part1(lines, year, day):
     answer = 0
+    answers = []
+    answered = set()
     
     for line in lines:
-        pass
+        if line == '':
+            # reset
+            answers.append(len(answered))
+            answered = set()
+        else:
+            for char in line:
+                answered.add(char)
     
-    '''
-    solve part 1 of the problem here
-    # answer = <the answer to the problem>
-    '''
+    # get the last one
+    answers.append(len(answered))
     
-    # eval_answer(year, day, 1, answer)
+    answer = sum(answers)
+    print(f"{answer = }\n{answers = }")
+    eval_answer(year, day, 1, answer)
 
 
 def part2(lines, year, day):
     answer = 0
+    answers = []
+    answered_s = set()
+    answered_c = Counter()
+    answered_ctr = 0
+    num_people = 0
     
     for line in lines:
-        pass
+        if line == '':
+            for char in answered_s:
+                if answered_c[char] == num_people:
+                    answered_ctr += 1
+            answers.append(answered_ctr)
+            
+            # reset
+            num_people = 0
+            answered_s - set()
+            answered_c = Counter()
+            answered_ctr = 0
+            
+        else:
+            answered_c += Counter(line)
+            for char in line:
+                answered_s.add(char)
+            num_people += 1
     
-    '''
-    solve part 2 of the problem here
-    # answer = <the answer to the problem>
-    '''
+    # get the last one
+    for char in answered_s:
+        if answered_c[char] == num_people:
+            answered_ctr += 1
+    answers.append(answered_ctr)
     
+    answer = sum(answers)
     eval_answer(year, day, 2, answer)
 
 
