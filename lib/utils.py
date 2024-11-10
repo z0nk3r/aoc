@@ -221,6 +221,7 @@ def eval_answer(year: int, day: int, part: int, answer: int) -> None:
             print(f"[!] You already have this star! {'⭐'*int(part)}")
         else:
             print(f"[x] {part} - {answer} was incorrect.")
+            print(f"{response = }")
             _aoc_timeout(response)
             print("\n")
 
