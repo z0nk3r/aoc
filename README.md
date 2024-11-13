@@ -111,6 +111,8 @@ $> python3 aoc.py -a
 ```
 
 ### Workflow
+In regards to the general workflow: in the editing and submitting portions below, the part to answer will automatically be determined by using hidden dotfiles in the challenge's directory. These files are automatically generated when a part to a challenge is completed (`.part1solved` & `.part2solved`). Additionally, previously submitted answers are cached in the challenge's directory so as not to overload the AoC server or cause a self-induced timeout (`.part1tries` and `.part2tries`). Upon re-encountering a previous attempt, or attempting to re-solve an already completed challenge, the user is notified accordingly.
+
 Generally, the workflow to solve a problem is as follows:
 
 - `cd <root-dir>`
@@ -119,9 +121,10 @@ Generally, the workflow to solve a problem is as follows:
     - vscode will open working file `day<day>.py` and puzzle `input`
     - puzzle website will open in most-recently-used browser window
 - `cd <year>/<day>`
+
 - edit `day<day>.py` part1
     - `python3 day<day>.py < input`
-    - answer autosubmits
+    - answer for part1 autosubmits
     - repeat/rework until correct
 
 - edit `day<day>.py` part2
