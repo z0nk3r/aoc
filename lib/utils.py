@@ -1,11 +1,12 @@
 import os
+import sys
 import re
 import time
 import requests
 import datetime
 import traceback
 
-from typing import Tuple, Union
+from typing import Tuple, Union, Callable, List
 
 import dateutil.tz
 
@@ -150,7 +151,7 @@ def _submit_answer(year, day, part, answer) -> Tuple[bool, Union[str, None]]:
             return True, line  # Good answer
         if TOO_RECENT_KEY in line:
             # print(line)
-            assert False
+            return False, line
         for k in BAD_ANSWER_KEYS:
             if k in line:
                 # print(line)
@@ -211,6 +212,8 @@ def eval_answer(year: int, day: int, part: int, answer: int) -> None:
         print("[!] You already tried this answer!")
         return
 
+    _add_to_answers(part, answer)
+
     b_submit, response = _submit_answer(year, day, part, answer)
     if b_submit:
         os.system(f"touch .part{part}solved")
@@ -224,8 +227,6 @@ def eval_answer(year: int, day: int, part: int, answer: int) -> None:
             print(f"{response = }")
             _aoc_timeout(response)
             print("\n")
-
-    _add_to_answers(part, answer)
 
 
 def get_yearday(path: str = "") -> Tuple[int, int]:
@@ -264,3 +265,27 @@ def get_yearday(path: str = "") -> Tuple[int, int]:
             day = now.day + 1
 
     return year, day
+
+def puzzle_setup() -> Tuple[int, int]:
+    '''Sets up a puzzle'''
+    year, day = get_yearday(os.getcwd())
+    if year == -2 or day == -2:
+        sys.exit(0)
+    
+    if not os.path.exists(".part1tries"):
+        os.system("touch .part1tries")
+    if not os.path.exists(".part2tries"):
+        os.system("touch .part2tries")
+    
+    return year, day
+
+def puzzle_run(part1: Callable[[List[str], int, int], None], part2: Callable[[List[str], int, int], None], lines: List[str], year: int, day: int) -> None:
+    '''Runs a puzzle'''
+    if not os.path.exists(".part1solved"):
+        print(f"[-] Solving Part 1 for {year} {day}")
+        part1(lines, year, day)
+    elif os.path.exists(".part1solved") and not os.path.exists(".part2solved"):
+        print(f"[-] Solving Part 2 for {year} {day}")
+        part2(lines, year, day)
+    else:
+        print(f"You already have all of the stars for {year} {day}!")
