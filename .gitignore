@@ -2,3 +2,4 @@
 *.part2*
 smol
 lib/*.txt
+*.pyc
