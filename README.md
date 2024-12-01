@@ -159,8 +159,7 @@ def part1(lines, year, day):
     solve part 1 of the problem here
     # answer = <the answer to the problem>
     '''
-    
-    # eval_answer(year, day, 1, answer)
+    return answer
 
 
 def part2(lines, year, day):
@@ -173,8 +172,7 @@ def part2(lines, year, day):
     solve part 2 of the problem here
     # answer = <the answer to the problem>
     '''
-    
-    # eval_answer(year, day, 2, answer)
+    return answer
 
 
 if __name__ == "__main__":
