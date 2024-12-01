@@ -204,7 +204,7 @@ def _add_to_answers(part: int, answer: int) -> None:
         given_answers.write(f"{answer}\n")
 
 
-def eval_answer(year: int, day: int, part: int, answer: int) -> None:
+def _eval_answer(year: int, day: int, part: int, answer: int) -> None:
     """Evaluates the provided answer. Auto submits answer, and evals if correct or incorrect"""
     print(f"[-] Attempting answer of {answer} for {year} {day:02} - part {part}")
 
@@ -229,14 +229,14 @@ def eval_answer(year: int, day: int, part: int, answer: int) -> None:
             print("\n")
 
 
-def get_yearday(path: str = "") -> Tuple[int, int]:
+def _get_yearday(path: str = "") -> Tuple[int, int]:
     """
-    When used as part of a solution attempt (in the template), get_yearday will
+    When used as part of a solution attempt, get_yearday will
     use current working directory to get the year and day.
 
     Alternatively, When using the '-a' cli opt, auto figure out year and day of next challenge.
     If its before Dec 1st , return current year, and 1.
-    if its after dec 25th, return next year and 1.
+    if its after Dec 25th, return next year and 1.
     Otherwise, return current year, current day + 1.
     """
     year = -2
@@ -268,7 +268,7 @@ def get_yearday(path: str = "") -> Tuple[int, int]:
 
 def puzzle_setup() -> Tuple[int, int]:
     '''Sets up a puzzle'''
-    year, day = get_yearday(os.getcwd())
+    year, day = _get_yearday(os.getcwd())
     if year == -2 or day == -2:
         print("[!] get year/day failed.")
         sys.exit(0)
@@ -280,17 +280,17 @@ def puzzle_setup() -> Tuple[int, int]:
     
     return year, day
 
-def puzzle_run(part1: Callable[[List[str], int, int], int], part2: Callable[[List[str], int, int], int], lines: List[str], year: int, day: int) -> None:
+def puzzle_run(part1: Callable[[List[str]], int], part2: Callable[[List[str]], int], lines: List[str], year: int, day: int) -> None:
     '''Runs a puzzle'''
     if not os.path.exists(".part1solved"):
         print(f"[-] Solving Part 1 for {year} {day}")
-        answer = part1(lines, year, day)
-        eval_answer(year, day, 1, answer)
+        answer = part1(lines)
+        _eval_answer(year, day, 1, answer)
 
     elif os.path.exists(".part1solved") and not os.path.exists(".part2solved"):
         print(f"[-] Solving Part 2 for {year} {day}")
-        answer = part2(lines, year, day)
-        eval_answer(year, day, 2, answer)
+        answer = part2(lines)
+        _eval_answer(year, day, 2, answer)
 
     else:
         print(f"You already have all of the stars for {year} {day}!")
