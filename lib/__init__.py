@@ -6,6 +6,7 @@ from .utils import (
     session_get_file, 
     time_to_release,
     print_countdown,
+    get_yearday,
     puzzle_setup,
     puzzle_run
 )

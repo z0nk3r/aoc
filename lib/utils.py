@@ -229,7 +229,7 @@ def _eval_answer(year: int, day: int, part: int, answer: int) -> None:
             print("\n")
 
 
-def _get_yearday(path: str = "") -> Tuple[int, int]:
+def get_yearday(path: str = "") -> Tuple[int, int]:
     """
     When used as part of a solution attempt, get_yearday will
     use current working directory to get the year and day.
@@ -268,7 +268,7 @@ def _get_yearday(path: str = "") -> Tuple[int, int]:
 
 def puzzle_setup() -> Tuple[int, int]:
     '''Sets up a puzzle'''
-    year, day = _get_yearday(os.getcwd())
+    year, day = get_yearday(os.getcwd())
     if year == -2 or day == -2:
         print("[!] get year/day failed.")
         sys.exit(0)
