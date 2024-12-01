@@ -270,6 +270,7 @@ def puzzle_setup() -> Tuple[int, int]:
     '''Sets up a puzzle'''
     year, day = get_yearday(os.getcwd())
     if year == -2 or day == -2:
+        print("[!] get year/day failed.")
         sys.exit(0)
     
     if not os.path.exists(".part1tries"):
@@ -279,13 +280,17 @@ def puzzle_setup() -> Tuple[int, int]:
     
     return year, day
 
-def puzzle_run(part1: Callable[[List[str], int, int], None], part2: Callable[[List[str], int, int], None], lines: List[str], year: int, day: int) -> None:
+def puzzle_run(part1: Callable[[List[str], int, int], int], part2: Callable[[List[str], int, int], int], lines: List[str], year: int, day: int) -> None:
     '''Runs a puzzle'''
     if not os.path.exists(".part1solved"):
         print(f"[-] Solving Part 1 for {year} {day}")
-        part1(lines, year, day)
+        answer = part1(lines, year, day)
+        eval_answer(year, day, 1, answer)
+
     elif os.path.exists(".part1solved") and not os.path.exists(".part2solved"):
         print(f"[-] Solving Part 2 for {year} {day}")
-        part2(lines, year, day)
+        answer = part2(lines, year, day)
+        eval_answer(year, day, 2, answer)
+
     else:
         print(f"You already have all of the stars for {year} {day}!")
