@@ -1,4 +1,4 @@
-'''Import util modules form this library'''
+'''Import util modules from this library'''
 
 from .utils import (
     reload_cookie,
