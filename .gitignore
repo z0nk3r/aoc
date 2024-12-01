@@ -1,5 +1,6 @@
 *.part1*
 *.part2*
+input
 smol
 lib/*.txt
 *.pyc

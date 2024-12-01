@@ -6,7 +6,7 @@ sys.path.append(str(Path(__file__).parent.parent.parent))
 from lib import eval_answer, get_yearday
 
 
-def part1(lines, year, day):
+def part1(lines):
     answer = 0
     
     for line in lines:
@@ -16,11 +16,10 @@ def part1(lines, year, day):
     solve part 1 of the problem here
     # answer = <the answer to the problem>
     '''
-    
-    # eval_answer(year, day, 1, answer)
+    return answer
 
 
-def part2(lines, year, day):
+def part2(lines):
     answer = 0
     
     for line in lines:
@@ -30,13 +29,13 @@ def part2(lines, year, day):
     solve part 2 of the problem here
     # answer = <the answer to the problem>
     '''
-    
-    eval_answer(year, day, 2, answer)
+    return answer
 
 
 if __name__ == "__main__":
     year, day = get_yearday(os.getcwd())
     if year == -2 or day == -2:
+        print("[!] Get of current year/day failed.")
         sys.exit(0)
     
     if not os.path.exists(".part1tries"):
@@ -48,9 +47,11 @@ if __name__ == "__main__":
 
     if not os.path.exists(".part1solved"):
         print(f"[-] Solving Part 1 for {year} {day}")
-        part1(lines, year, day)
+        answer = part1(lines)
+        eval_answer(year, day, 1, answer)
     elif os.path.exists(".part1solved") and not os.path.exists(".part2solved"):
         print(f"[-] Solving Part 2 for {year} {day}")
-        part2(lines, year, day)
+        answer = part2(lines)
+        eval_answer(year, day, 2, answer)
     else:
         print(f"You already have all of the stars for {year} {day}!")
