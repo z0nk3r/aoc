@@ -80,6 +80,7 @@ def download_input_when_live(year: str, day: str) -> None:
         if (to_wait_seconds % 300) == 0:  # every 5 minutes
             to_wait = time_to_release(year, day) + datetime.timedelta(seconds=2)
             to_wait_seconds = int(to_wait.total_seconds())
+    print("")
 
 
 def print_usage() -> None:

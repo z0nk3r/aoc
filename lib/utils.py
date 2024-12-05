@@ -173,6 +173,7 @@ def _aoc_timeout(answer_line: str) -> None:
         timeout = {
             "one minute": datetime.timedelta(minutes=1),
             "5 minutes": datetime.timedelta(minutes=5),
+            "10 minutes": datetime.timedelta(minutes=10),
         }.get(m.group(1))
         if timeout is None:
             print(
@@ -206,23 +207,23 @@ def _add_to_answers(part: int, answer: int) -> None:
 
 def _eval_answer(year: int, day: int, part: int, answer: int) -> None:
     """Evaluates the provided answer. Auto submits answer, and evals if correct or incorrect"""
-    print(f"[-] Attempting answer of {answer} for {year} {day:02} - part {part}")
+    print(f"[-] Attempting answer of '{answer}' for {year} {day:02} - part {part}")
 
     if _check_if_old_answer(part, answer):
         print("[!] You already tried this answer!")
         return
 
-    _add_to_answers(part, answer)
-
     b_submit, response = _submit_answer(year, day, part, answer)
     if b_submit:
+        _add_to_answers(part, answer)
         os.system(f"touch .part{part}solved")
         print(f"[-] {part}. {answer} - Correct! {'⭐' * int(part)}")
     else:
         if "already complete it" in response:
             os.system(f"touch .part{part}solved")
-            print(f"[!] You already have this star! {'⭐'*int(part)}")
+            print(f"[!] You already have this star! {'⭐' * int(part)}")
         else:
+            _add_to_answers(part, answer)
             print(f"[x] {part} - {answer} was incorrect.")
             print(f"{response = }")
             _aoc_timeout(response)
