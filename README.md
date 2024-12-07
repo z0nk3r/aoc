@@ -180,7 +180,10 @@ if __name__ == "__main__":
     
     lines = [line.replace("\n", "") for line in open(0).readlines()]
 
-    puzzle_run(part1, part2, lines, year, day)
+    try:
+        puzzle_run(part1, part2, lines, year, day)
+    except KeyboardInterrupt:
+        print("")
 ```
 
 `open(0)` indicates the use of STDIN, so in order to run this template to solve a puzzle, use a PIPE or a FIFO on the command line. Either of the below examples work:
