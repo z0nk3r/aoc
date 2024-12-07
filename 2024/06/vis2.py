@@ -55,21 +55,8 @@ def get_dir_char(g_dir):
 
 
 def turn_right(g_dir):
-    new_dir = (-1, -1)
-
-    if g_dir == (-1, 0):
-        new_dir = (0, 1)
-
-    elif g_dir == (0, 1):
-        new_dir = (1, 0)
-
-    elif g_dir == (1, 0):
-        new_dir = (0, -1)
-
-    elif g_dir == (0, -1):
-        new_dir = (-1, 0)
-
-    return new_dir
+    right_dir_table = {(-1, 0): (0, 1), (0, 1): (1, 0), (1, 0): (0, -1), (0, -1): (-1, 0)}
+    return right_dir_table[g_dir]
 
 
 def get_path(maze, guard):
