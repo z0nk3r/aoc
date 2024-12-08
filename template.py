@@ -34,9 +34,7 @@ def part2(lines):
 if __name__ == "__main__":
     year, day = puzzle_setup()
 
-    lines = [line.replace("\n", "") for line in open(0).readlines()]
-
     try:
-        puzzle_run(part1, part2, lines, year, day)
+        puzzle_run(part1, part2, year, day)
     except KeyboardInterrupt:
         print("")

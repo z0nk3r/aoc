@@ -58,6 +58,7 @@ def setup_env(year: str, day: str) -> None:
     # open puzzle and working file with `code -r`
     os.system(f"code -r {dest_path}/{dest_file}")
     os.system(f"code -r {dest_path}/input")
+    os.system(f"code -r {dest_path}/test")
 
     # open the site
     webbrowser.open(f"https://adventofcode.com/{year}/day/{day}")

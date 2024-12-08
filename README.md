@@ -111,26 +111,30 @@ $> python3 aoc.py -a
 ```
 
 ### Workflow
-In regards to the general workflow: in the editing and submitting portions below, the part to answer will automatically be determined by using hidden dotfiles in the challenge's directory. These files are automatically generated when a part to a challenge is completed (`.part1solved` & `.part2solved`). Additionally, previously submitted answers are cached in the challenge's directory so as not to overload the AoC server or cause a self-induced timeout (`.part1tries` and `.part2tries`). Upon re-encountering a previous attempt, or attempting to re-solve an already completed challenge, the user is notified accordingly.
+In regards to the general workflow: in the editing and submitting portions below, the part to answer will automatically be determined by using hidden dotfiles in the challenge's directory. These files are automatically generated when a part to a challenge is completed (`.part1solved` & `.part2solved`). Additionally, previously submitted answers are cached in the challenge's directory so as not to overload the AoC server or cause a self-induced timeout (`.part1tries` & `.part2tries`). Upon re-encountering a previous attempt, or attempting to re-solve an already completed challenge, the user is notified accordingly.
+
+Before sending the attempted answer, your solution will be tested against the test data provided in the challenge's writeup. 
+This requires manual copy-pasting (for now) of the example puzzle input into the `test` file. If your solution fails the attempt, 
+then your attempted answer will not be sent to the AoC server as a further mitigation of self-induced timeouts.
 
 Generally, the workflow to solve a problem is as follows:
 
 - `cd <root-dir>`
 - `python3 aoc.py -a`
     - puzzle will download, template will copy down to `<year>/<day>` dir
-    - vscode will open working file `day<day>.py` and puzzle `input`
-    - puzzle website will open in most-recently-used browser window
+    - vscode will open working file `day<day>.py`, puzzle `input`, and `test` file for test puzzle input.
+    - puzzle website will open in most-recently-used/focused browser window
 - `cd <year>/<day>`
 
 - edit `day<day>.py` part1
     - `python3 day<day>.py < input`
-    - answer for part1 autosubmits
-    - repeat/rework until correct
+    - answer for part1 autosubmits if tests pass
+    - otherwise, repeat/rework until correct
 
 - edit `day<day>.py` part2
     - `python3 day<day>.py < input`
-    - answer for part2 autosubmits
-    - repeat/rework until correct
+    - answer for part2 autosubmits if tests pass
+    - otherwise, repeat/rework until correct
 
 - `cd ../..` (back to the root-dir)
 - `python3 aoc.py -a` (to sit in countdown and wait for the next days problem)
@@ -138,7 +142,7 @@ Generally, the workflow to solve a problem is as follows:
 
 # template
 
-A Python3 template (`template.py`) to solve each problem is also provided. The template supports auto submission of answers and will keep track of incorrect answers tried. 
+A Python3 template (`template.py`) to solve each problem is also provided. The template supports auto submission of answers, testing of possible solutions, and keeps track of incorrect answers tried using the `lib/utils` functions at the root level.
 
 See below:
 ```python
@@ -146,10 +150,10 @@ import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
-from lib import eval_answer, puzzle_setup, puzzle_run
+from lib import puzzle_setup, puzzle_run
 
 
-def part1(lines, year, day):
+def part1(lines):
     answer = 0
     
     for line in lines:
@@ -162,7 +166,7 @@ def part1(lines, year, day):
     return answer
 
 
-def part2(lines, year, day):
+def part2(lines):
     answer = 0
     
     for line in lines:
@@ -177,16 +181,16 @@ def part2(lines, year, day):
 
 if __name__ == "__main__":
     year, day = puzzle_setup()
-    
-    lines = [line.replace("\n", "") for line in open(0).readlines()]
 
     try:
-        puzzle_run(part1, part2, lines, year, day)
+        puzzle_run(part1, part2, year, day)
     except KeyboardInterrupt:
         print("")
+
 ```
 
-`open(0)` indicates the use of STDIN, so in order to run this template to solve a puzzle, use a PIPE or a FIFO on the command line. Either of the below examples work:
+By default, the template will use the local `input` puzzle file. However, the use of `STDIN` is supported.
+To run this template to solve a puzzle using `STDIN`, use a PIPE or a FIFO on the command line. Either of the below examples work:
 ```shell
  $> python3 day1.py < input
  $> cat input | python3 day1.py
@@ -195,10 +199,17 @@ if __name__ == "__main__":
 If correctly solved, you should see an output similar to this:
 ```shell
 user@hostname:~/aoc/2020/04 $ python3 day04.py < input
-[-] Attempting answer of 190 for 2020 04 - part 1
+[-] Solving Part 1 for 2020 4
+[-] Checking current solution against the test data.
+  [-] Test solution passed!
+[-] Sending answer of 190 for 2020 04 - part 1
+
 [-] 1. 190 - Correct! ⭐
 user@hostname:~/aoc/2020/04 $ python3 day04.py < input
 [-] Solving Part 2 for 2020 4
-[-] Attempting answer of 121 for 2020 04 - part 2
+[-] Checking current solution against the test data.
+  [-] Test solution passed!
+[-] Sending answer of 121 for 2020 04 - part 2
+
 [-] 2. 121 - Correct! ⭐⭐
 ```

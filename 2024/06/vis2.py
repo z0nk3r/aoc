@@ -15,7 +15,7 @@ HIDE_CURS = "\033[?25l"
 WIN_H, WIN_W = get_terminal_size()
 WIN_SIZE = int((WIN_W // 2) * 0.75)
 
-FPS = 30
+FPS = 60
 
 
 def in_bounds(maze, row, col):
@@ -23,7 +23,7 @@ def in_bounds(maze, row, col):
     max_row = len(maze)
     min_col = 0
     max_col = len(maze[0])
-    
+
     return min_row <= row < max_row and min_col <= col < max_col
 
 

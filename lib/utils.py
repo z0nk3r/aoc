@@ -2,6 +2,7 @@ import os
 import sys
 import re
 import time
+import select
 import requests
 import datetime
 import traceback
@@ -121,7 +122,7 @@ def print_countdown(to_wait_seconds: int, message: str) -> None:
     mins = int((to_wait_seconds - (days * 86400) - (hrs * 3600)) // 60)
     secs = int((to_wait_seconds - (days * 86400) - (hrs * 3600) - mins * 60))
     print(
-        f"\r [x] {days:4}D, {hrs:02}H, {mins:02}M, {secs:02}S until {message}. Waiting... ",
+        f"\r [X] {days:4}D, {hrs:02}H, {mins:02}M, {secs:02}S until {message}. Waiting... ",
         end="",
         flush=True,
     )
@@ -191,12 +192,50 @@ def _aoc_timeout(answer_line: str) -> None:
         print_countdown(timeout_seconds, "Timeout is Over")
 
 
+def _get_test_answers(year: int, day: int) -> bool:
+    '''Scrape the example test answers from the webpage'''
+    notLoggedInErr = (
+        "Puzzle inputs differ by user.  Please log in to get your puzzle input."
+    )
+    tooEarlyErr = "Please don't repeatedly request this endpoint before it unlocks! The calendar countdown is synchronized with the server time; the link will be enabled on the calendar the instant this puzzle becomes available."
+
+    _s = setup_session()
+
+    url = f"https://adventofcode.com/{year}/day/{day}"
+    r = _s.get(url)
+    if r.status_code != 400:
+        # There isn't a client error so we *should* be logged in?
+        r.raise_for_status()
+        if str(r.content) != notLoggedInErr and str(r.content) != tooEarlyErr:
+            # The contents are good! (I think)
+            t_answers = re.findall("<code><em>(\d+)<\/em><\/code>", str(r.content))
+            with open(".test_answers", "w") as testfile:
+                testfile.write('\n'.join(t_answers))
+            return True
+    
+    return False
+
+
 def _check_if_old_answer(part: int, answer: int) -> bool:
     """Checks old answers if current answer has already been attempted"""
+    if not os.path.exists(f".part{part}tries"):
+        return False
+
     given_answers = [
         int(line.replace("\n", "")) for line in open(f".part{part}tries").readlines()
     ]
     return answer in given_answers
+
+
+def _check_test_answer(answer: int) -> bool:
+    """Checks test answers if current test answer is correct"""
+    if not os.path.exists(f".test_answers"):
+        return False
+
+    test_answers = [
+        int(line.replace("\n", "")) for line in open(f".test_answers").readlines()
+    ]
+    return answer in test_answers
 
 
 def _add_to_answers(part: int, answer: int) -> None:
@@ -207,7 +246,11 @@ def _add_to_answers(part: int, answer: int) -> None:
 
 def _eval_answer(year: int, day: int, part: int, answer: int) -> None:
     """Evaluates the provided answer. Auto submits answer, and evals if correct or incorrect"""
-    print(f"[-] Attempting answer of '{answer}' for {year} {day:02} - part {part}")
+    if answer == 0:
+        print(f"[X] Answer of '{answer}' for {year} {day:02} - part {part} given. Auto exiting.")
+        return
+
+    print(f"[-] Sending answer of '{answer}' for {year} {day:02} - part {part}\n")
 
     if _check_if_old_answer(part, answer):
         print("[!] You already tried this answer!")
@@ -224,10 +267,54 @@ def _eval_answer(year: int, day: int, part: int, answer: int) -> None:
             print(f"[!] You already have this star! {'⭐' * int(part)}")
         else:
             _add_to_answers(part, answer)
-            print(f"[x] {part} - {answer} was incorrect.")
+            print(f"[X] {part} - {answer} was incorrect.")
             print(f"{response = }")
             _aoc_timeout(response)
             print("\n")
+
+
+def _read_input(infile: str="input") ->List[str]:
+    '''
+    Gets the Puzzle input from the local "input" file. 
+    Other filenames can be passed as param, "input" is the default.
+    If a file is waiting on stdin, read that file instead.
+    
+    Returns: 
+        List of line separated lines with '\\n' removed.
+    '''
+    if not os.path.exists(infile):
+        return [""]
+
+    file = infile if not select.select([sys.stdin, ], [], [], 0.0)[0] else 0
+    return [line.replace("\n", "") for line in open(file).readlines()]
+
+
+def _pass_the_test(part_func: Callable[[List[str]], int]) -> bool:
+    '''
+    Runs the current attempt against the test data provided in the website's writeup.
+    This requires the sample data to be copy-pasted into a 'test' file and the test
+    answers to be copy-pasted into the '.test_answers' file.
+    '''
+    
+    print("[-] Checking current solution against the test data.")
+    
+    year, day = get_yearday(os.getcwd())
+    if not _get_test_answers(year, day):
+        print(f"  [X] Unable to get test answers. Try again later.")
+        return False
+    
+    input = _read_input("test")
+    if input == [""]:
+        print(f"  [X] 'test' data file does not exist. Re-get it and try again.")
+        return False
+
+    answer = part_func(input)
+    if not _check_test_answer(answer):
+        print(f"  [X] Test answer '{answer}' is incorrect. Try again.")
+        return False
+    
+    print(f"  [-] Test solution passed! ({answer})")
+    return True
 
 
 def get_yearday(path: str = "") -> Tuple[int, int]:
@@ -249,7 +336,7 @@ def get_yearday(path: str = "") -> Tuple[int, int]:
             year = int(curr_path[-2])
             day = int(curr_path[-1])
         except ValueError:
-            print("[x] Bad year day values - are you in the right subdir?")
+            print("[X] Bad year day values - are you in the right subdir?")
 
     else:
         now = datetime.datetime.now(dateutil.tz.tzutc()) + datetime.timedelta(hours=-5)
@@ -267,6 +354,7 @@ def get_yearday(path: str = "") -> Tuple[int, int]:
 
     return year, day
 
+
 def puzzle_setup() -> Tuple[int, int]:
     '''Sets up a puzzle'''
     year, day = get_yearday(os.getcwd())
@@ -281,17 +369,26 @@ def puzzle_setup() -> Tuple[int, int]:
     
     return year, day
 
-def puzzle_run(part1: Callable[[List[str]], int], part2: Callable[[List[str]], int], lines: List[str], year: int, day: int) -> None:
+
+def puzzle_run(part1: Callable[[List[str]], int], part2: Callable[[List[str]], int], year: int, day: int) -> None:
     '''Runs a puzzle'''
     if not os.path.exists(".part1solved"):
         print(f"[-] Solving Part 1 for {year} {day}")
-        answer = part1(lines)
+
+        if not _pass_the_test(part1):
+            return
+
+        answer = part1(_read_input())
         _eval_answer(year, day, 1, answer)
 
     elif os.path.exists(".part1solved") and not os.path.exists(".part2solved"):
         print(f"[-] Solving Part 2 for {year} {day}")
-        answer = part2(lines)
+
+        if not _pass_the_test(part2):
+            return
+
+        answer = part2(_read_input())
         _eval_answer(year, day, 2, answer)
 
     else:
-        print(f"You already have all of the stars for {year} {day}!")
+        print(f"[!] You already have all of the stars for {year} {day}!")
