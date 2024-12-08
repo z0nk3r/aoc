@@ -92,7 +92,6 @@ def session_get_file(_s: requests.Session, dest_path: str, url: str) -> bool:
     if r.status_code != 400:
         # There isn't a client error so we *should* be logged in?
         r.raise_for_status()
-        contents = r.content
         if str(r.content) != notLoggedInErr and str(r.content) != tooEarlyErr:
             # The contents are good! (I think)
             destfile = open(dest_path, "wb")
@@ -370,8 +369,10 @@ def puzzle_setup() -> Tuple[int, int]:
     return year, day
 
 
-def puzzle_run(part1: Callable[[List[str]], int], part2: Callable[[List[str]], int], year: int, day: int) -> None:
+def puzzle_run(part1: Callable[[List[str]], int], part2: Callable[[List[str]], int]) -> None:
     '''Runs a puzzle'''
+    year, day = puzzle_setup()
+
     if not os.path.exists(".part1solved"):
         print(f"[-] Solving Part 1 for {year} {day}")
 
@@ -381,7 +382,7 @@ def puzzle_run(part1: Callable[[List[str]], int], part2: Callable[[List[str]], i
         answer = part1(_read_input())
         _eval_answer(year, day, 1, answer)
 
-    elif os.path.exists(".part1solved") and not os.path.exists(".part2solved"):
+    elif not os.path.exists(".part2solved"):
         print(f"[-] Solving Part 2 for {year} {day}")
 
         if not _pass_the_test(part2):

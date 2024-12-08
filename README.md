@@ -180,10 +180,8 @@ def part2(lines):
 
 
 if __name__ == "__main__":
-    year, day = puzzle_setup()
-
     try:
-        puzzle_run(part1, part2, year, day)
+        puzzle_run(part1, part2)
     except KeyboardInterrupt:
         print("")
 
