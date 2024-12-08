@@ -58,6 +58,7 @@ def setup_env(year: str, day: str) -> None:
     # open puzzle and working file with `code -r`
     os.system(f"code -r {dest_path}/{dest_file}")
     os.system(f"code -r {dest_path}/input")
+    os.system(f"code -r {dest_path}/test")
 
     # open the site
     webbrowser.open(f"https://adventofcode.com/{year}/day/{day}")
@@ -80,6 +81,7 @@ def download_input_when_live(year: str, day: str) -> None:
         if (to_wait_seconds % 300) == 0:  # every 5 minutes
             to_wait = time_to_release(year, day) + datetime.timedelta(seconds=2)
             to_wait_seconds = int(to_wait.total_seconds())
+    print("")
 
 
 def print_usage() -> None:
