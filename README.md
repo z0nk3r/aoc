@@ -196,18 +196,18 @@ To run this template to solve a puzzle using `STDIN`, use a PIPE or a FIFO on th
 
 If correctly solved, you should see an output similar to this:
 ```shell
-user@hostname:~/aoc/2020/04 $ python3 day04.py < input
-[-] Solving Part 1 for 2020 4
-[-] Checking current solution against the test data.
-  [-] Test solution passed!
-[-] Sending answer of 190 for 2020 04 - part 1
+user@hostname:~/aoc/2024/10 (2024)$ python3 day10.py 
+[*] Solving Part 1 for 2024 10
+[*] Checking current solution against the test data.
+  [✔] Test solution passed! (36)
+[*] Sending answer of (709) for 2024 10 - part 1
 
-[-] 1. 190 - Correct! ⭐
-user@hostname:~/aoc/2020/04 $ python3 day04.py < input
-[-] Solving Part 2 for 2020 4
-[-] Checking current solution against the test data.
-  [-] Test solution passed!
-[-] Sending answer of 121 for 2020 04 - part 2
+[✔] 1. 709 - Correct! ⭐
+user@hostname:~/aoc/2024/10 (2024)$ python3 day10.py 
+[*] Solving Part 2 for 2024 10
+[*] Checking current solution against the test data.
+  [✔] Test solution passed! (81)
+[*] Sending answer of (1326) for 2024 10 - part 2
 
-[-] 2. 121 - Correct! ⭐⭐
+[✔] 2. 1326 - Correct! ⭐⭐
 ```
