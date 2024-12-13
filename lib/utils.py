@@ -26,7 +26,13 @@ class CUE(Enum):
     CYAN = "\033[1;96m"
     YELLOW = "\033[1;93m"
     RED = "\033[1;91m"
+    BOLD = "\033[1;37m"
+    FAINT = "\033[2m"
     RESET = "\033[0m"
+
+    CLEAR_TERM = "\033[2J\033[;H"
+    SHOW_CURS = "\033[?25h"
+    HIDE_CURS = "\033[?25l"
 
     GOOD = f"{GREEN}[✔]{RESET}"
     INFO = f"{CYAN}[*]{RESET}"
