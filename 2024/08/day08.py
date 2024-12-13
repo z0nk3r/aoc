@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
-from lib import puzzle_setup, puzzle_run
+from lib import puzzle_run
 
 import string
 from math import sqrt
@@ -86,9 +86,7 @@ def part2(lines):
 
 
 if __name__ == "__main__":
-    year, day = puzzle_setup()
-
     try:
-        puzzle_run(part1, part2, year, day)
+        puzzle_run(part1, part2)
     except KeyboardInterrupt:
         print("")

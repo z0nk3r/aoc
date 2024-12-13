@@ -1,9 +1,8 @@
-import os
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
-from lib import puzzle_setup, puzzle_run
+from lib import puzzle_run
 
 
 def part1(lines):
@@ -49,8 +48,7 @@ def part2(lines):
 
 
 if __name__ == "__main__":
-    year, day = puzzle_setup()
-
-    lines = [line.replace("\n", "") for line in open(0).readlines()]
-
-    puzzle_run(part1, part2, lines, year, day)
+    try:
+        puzzle_run(part1, part2)
+    except KeyboardInterrupt:
+        print("")

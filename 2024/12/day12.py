@@ -24,7 +24,7 @@ def calc_sides(coordlist):
     '''
     The number of sides is equal to the number of corners.
     '''
-    sides = 0
+    corners = 0
     if len(coordlist) == 1:
         return 4
 
@@ -42,25 +42,25 @@ def calc_sides(coordlist):
 
         # outer corners
         if (not N and not W and (E or S)):
-            sides += 1
+            corners += 1
         if (not N and not E and (W or S)):
-            sides += 1
+            corners += 1
         if (not S and not W and (N or E)):
-            sides += 1
+            corners += 1
         if (not S and not E and (N or W)):
-            sides += 1
+            corners += 1
 
         # inner corners
         if (N and W and not NW):
-            sides += 1
+            corners += 1
         if (N and E and not NE):
-            sides += 1
+            corners += 1
         if (S and W and not SW):
-            sides += 1
+            corners += 1
         if (S and E and not SE):
-            sides += 1
+            corners += 1
 
-    return sides
+    return corners
 
 
 def in_bounds(ridx, cidx, maze):
