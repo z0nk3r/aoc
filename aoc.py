@@ -1,5 +1,6 @@
-import sys
+"""Main calling Module for starting an Advent of Code puzzle solve"""
 
+import sys
 from lib import AoCSession, YeardayError, CUE
 
 
@@ -7,25 +8,25 @@ def print_usage() -> None:
     """Print the Usage/how-to line"""
     print(f"{CUE.CLEAR_TERM}")
     print(f"{CUE.BOLD}NAME{CUE.RESET}")
-    print(f"\taoc - Advent of Code Auto Puzzle Grabber!")
+    print("\taoc - Advent of Code Auto Puzzle Grabber!")
     print(f"\n{CUE.BOLD}USAGE{CUE.RESET}")
     print(f"\t{CUE.PROMPT} python3 aoc.py ([<year> <day>]|[-a]) -h\n")
     print(f"{CUE.BOLD}OPTIONS{CUE.RESET}")
     print(f"\t{CUE.BOLD}[<year> <day>]{CUE.RESET}")
-    print(f"\t\t- Provide the year and day to setup that specific puzzle")
+    print("\t\t- Provide the year and day to setup that specific puzzle")
     print(f"\n\t{CUE.BOLD}-a, --auto{CUE.RESET}")
-    print(f"\t\t- Auto wait for and/or auto pull the next available puzzle")
+    print("\t\t- Auto wait for and/or auto pull the next available puzzle")
     print(f"\n\t{CUE.BOLD}-h, --help{CUE.RESET}")
-    print(f"\t\t- Display this help and exit\n")
+    print("\t\t- Display this help and exit\n")
     print(f"{CUE.BOLD}EXAMPLES{CUE.RESET}")
     print(f"\t{CUE.PROMPT} python3 aoc.py 2020 01")
-    print(f"\t\tGets the Puzzle for year 2020 day 01\n")
+    print("\t\tGets the Puzzle for year 2020 day 01\n")
     print(f"\t{CUE.PROMPT} python3 aoc.py -a")
-    print(f"\t\tAuto wait countdown will start; once complete the puzzle will be displayed\n")
+    print("\t\tAuto wait countdown will start; once complete the puzzle will be displayed\n")
 
 
 def main() -> None:
-
+    """Main method for starting a puzzle solve"""
     aoc = None
 
     try:

@@ -1,30 +1,28 @@
+'''Module that contains the AoCSession Class and YeardayError Exception'''
+
+import datetime
 import os
 import re
-import time
-import requests
-import datetime
-import dateutil.tz
-import traceback
-import datetime
 import shutil
+import time
+import traceback
 import webbrowser
+from typing import Callable, List, Tuple, Union
 
-from typing import Tuple, Union, Callable, List
+import dateutil.tz
+import requests
 
-# ported from https://github.com/morgoth1145/advent-of-code/blob/8c17e50b4067d00a5ccc0753b1a0a7289e3f20e5/lib/aoc.py
+from .utils import (CUE, add_to_answers, aoc_timeout, check_if_old_answer,
+                    check_test_answer, print_countdown, read_input)
 
-from .utils import (
-    print_countdown, read_input,
-    check_test_answer,
-    check_if_old_answer,
-    add_to_answers,
-    aoc_timeout, CUE
-)
+# ported from:
+# https://github.com/morgoth1145/advent-of-code/blob/8c17e50b4067d00a5ccc0753b1a0a7289e3f20e5/lib/aoc.py
 
 
 class YeardayError(Exception):
     """Raise for yearday Exceptions in AocSession._get_yearday()"""
     def __init__(self, message):
+        super().__init__()
         self.message = message
     def __str__(self):
         return str(self.message)
@@ -32,17 +30,25 @@ class YeardayError(Exception):
 
 class AoCSession:
     '''The Advent of Code Session'''
-    
+
     def __init__(self, yearday_path: str = ""):
         '''Instantiation of the Advent of Code Session'''
-        self.username = self._load_username()
-        self.year, self.day = self._get_yearday(yearday_path)
+        self.username = ""
+        self.year = 0
+        self.day = 0
         self.session = self._setup_session()
         self.time_padding = 1
 
+        self._load_username()
+        self._get_yearday(yearday_path)
+
 
     def _load_username(self) -> str:
-        """Load the Username for User-Agent strings from disk. If it doesn't exist, user is prompted."""
+        """
+        Load the Username for User-Agent strings from disk.
+
+        If it doesn't exist, user is prompted.
+        """
         stack = traceback.extract_stack()
         lib_dir = f"{os.path.dirname(stack[-2].filename)}"
         username_file = f"{lib_dir}/username.txt"
@@ -52,17 +58,17 @@ class AoCSession:
 
         {CUE.PROMPT} """
             username = input(prompt)
-            ufile = open(username_file, "w")
-            ufile.write(username)
-            ufile.close()
+            with open(username_file, "w", encoding="utf-8") as ufile:
+                ufile.write(username)
+                ufile.close()
 
-        with open(username_file) as ufile:
+        with open(username_file, "r", encoding="utf-8") as ufile:
             rusername = ufile.readline().rstrip("\n")
 
-        return rusername
+        self.username = rusername
 
 
-    def _get_yearday(self, path: str = "") -> Tuple[int, int]:
+    def _get_yearday(self, path: str = "") -> None:
         """
         When used as part of a solution attempt, get_yearday will
         use current working directory to get the year and day.
@@ -97,12 +103,13 @@ class AoCSession:
                 year = now.year
                 day = now.day + 1
 
-        if not (2014 < year <= 2035):
+        if not 2014 < year <= 2035:
             raise YeardayError(f"Year '{year}' out of standard range (between 2015 and 2035)")
-        if not (0 < day <= 25):
+        if not 0 < day <= 25:
             raise YeardayError(f"Day '{day}' out of standard range (between 1 and 25)")
 
-        return year, day
+        self.year = year
+        self.day = day
 
 
     def _setup_session(self) -> requests.Session:
@@ -124,7 +131,7 @@ class AoCSession:
         lib_dir = f"{os.path.dirname(stack[-2].filename)}"
         cookie_file = f"{lib_dir}/cookie.txt"
 
-        if not os.path.exists(cookie_file) or bad == True:
+        if not os.path.exists(cookie_file) or bad is True:
             prompt = f"""
         Copy/Paste Cookie from the AoC Website
         After Logging into AoC:
@@ -133,10 +140,10 @@ class AoCSession:
 
         {CUE.PROMPT} """
             cookie = input(prompt)
-            with open(cookie_file, "w") as cfile:
+            with open(cookie_file, "w", encoding="utf-8") as cfile:
                 cfile.write(cookie)
 
-        with open(cookie_file) as cfile:
+        with open(cookie_file, "r", encoding="utf-8") as cfile:
             rcookie = cfile.readline().rstrip("\n")
 
         if _s is None:
@@ -153,18 +160,18 @@ class AoCSession:
 
 
     def _get_request(self, url: str) -> Union[bytes, None]:
-        notLoggedInErr = (
-            "Puzzle inputs differ by user.  Please log in to get your puzzle input."
-        )
-        tooEarlyErr = "Please don't repeatedly request this endpoint before it unlocks! The calendar countdown is synchronized with the server time; the link will be enabled on the calendar the instant this puzzle becomes available."
+        not_loggedin_err = "differ by user.  Please log in"
+        too_early_err = "repeatedly request this endpoint before it unlocks! The calendar countdown"
 
-        r = self.session.get(url)
-        if r.status_code != 400:
+        res = self.session.get(url)
+        if res.status_code != 400:
             # There isn't a client error so we *should* be logged in?
-            r.raise_for_status()
-            if str(r.content) != notLoggedInErr and str(r.content) != tooEarlyErr:
+            res.raise_for_status()
+            if not_loggedin_err not in str(res.content) and too_early_err not in str(res.content):
                 # The contents are good! (I think)
-                return r.content
+                return res.content
+
+        return ""
 
 
     def get_input(self, dest_path: str, url: str) -> bool:
@@ -200,7 +207,7 @@ class AoCSession:
             self._reload_cookie()
             bad_counter += 1
             if bad_counter == 5:
-                print("{FAIL} Bad Puzzle Input Get - Try Again Later")
+                print(f"{CUE.FAIL} Bad Puzzle Input Get - Try Again Later")
                 return False
 
         return True
@@ -212,16 +219,19 @@ class AoCSession:
         url = f"https://adventofcode.com/{self.year}/day/{self.day}"
         webpage = self._get_request(url)
         if webpage is not None:
-            t_answers = re.findall("<code><em>(\d+)<\/em><\/code>", str(webpage))
-            with open(".test_answers", "w") as testfile:
+            t_answers = re.findall(r"<code><em>(\d+)</em></code>", str(webpage))
+            with open(".test_answers", "w", encoding="utf-8") as testfile:
                 testfile.write('\n'.join(t_answers))
             return True
-        
+
         return False
 
 
     def setup_env(self) -> None:
-        """Makes a copy of the template into the current challenge's subdirectory and opens it in vscode"""
+        """
+        Makes a copy of the template into the current
+        challenge's subdirectory and opens it in vscode
+        """
         dest_path = f"{self.year}/{self.day:02}/"
         dest_file = f"day{self.day:02}.py"
         print(f'{CUE.INFO} Setting up environment for challenge in "./{self.year}/{self.day:02}/"')
@@ -258,7 +268,7 @@ class AoCSession:
             if (to_wait_seconds % 300) == 0:  # every 5 minutes
                 to_wait = self.time_to_release() + datetime.timedelta(seconds=self.time_padding)
                 to_wait_seconds = int(to_wait.total_seconds())
-        
+
         if print_spacer:
             print("")
 
@@ -278,26 +288,26 @@ class AoCSession:
         """Submit an answer"""
 
         url = f"https://adventofcode.com/{self.year}/day/{self.day}/answer"
-        r = self.session.post(url, data={"level": part, "answer": str(answer)})
-        r.raise_for_status()
+        res = self.session.post(url, data={"level": part, "answer": str(answer)})
+        res.raise_for_status()
 
         if self.day == 25 and part == 2:
             return True, None
 
-        TOO_RECENT_KEY = "You gave an answer too recently"
-        BAD_ANSWER_KEYS = [
+        too_recent_key = "You gave an answer too recently"
+        bad_answer_keys = [
             "That's not the right answer",
             "You don't seem to be solving the right level",
         ]
-        GOOD_ANSWER_KEY = "That's the right answer!"
-        for line in r.text.splitlines():
-            if GOOD_ANSWER_KEY in line:
+        good_answer_key = "That's the right answer!"
+        for line in res.text.splitlines():
+            if good_answer_key in line:
                 # print(line)
                 return True, line  # Good answer
-            if TOO_RECENT_KEY in line:
+            if too_recent_key in line:
                 # print(line)
                 return False, line
-            for k in BAD_ANSWER_KEYS:
+            for k in bad_answer_keys:
                 if k in line:
                     # print(line)
                     return False, line
@@ -312,23 +322,27 @@ class AoCSession:
 
         This requires the sample data to be copy-pasted into a 'test' file.
         '''
-        
+
         print(f"{CUE.INFO} Checking current solution against the test data.")
-        
+
         if not self.get_test_answers():
             print(f"  {CUE.FAIL} Unable to get test answers. Try again later.")
             return False
-        
-        input = read_input("test")
-        if input == [""]:
+
+        t_input = read_input("test")
+        if t_input == [""]:
             print(f"  {CUE.FAIL} 'test' data file does not exist. Re-get it and try again.")
             return False
 
-        answer = part_func(input)
+        answer = part_func(t_input)
+        if not isinstance(answer, int):
+            print(f"{CUE.FAIL} Test answer of '{answer}' is not an int, exiting.")
+            return False
+
         if not check_test_answer(answer):
             print(f"  {CUE.FAIL} Test answer '{answer}' is incorrect. Try again.")
             return False
-        
+
         print(f"  {CUE.GOOD} Test solution passed! ({CUE.CYAN}{answer}{CUE.RESET})")
         return True
 
@@ -337,6 +351,7 @@ class AoCSession:
         """Evaluates the provided answer. Auto submits answer, and evals if correct or incorrect"""
         print(f"{CUE.INFO} Solving Part {part} for {self.year} {self.day}")
 
+
         if not bypass:
             if not self.pass_the_test(part_func):
                 return
@@ -344,11 +359,17 @@ class AoCSession:
             print(f"{CUE.WARN} Skipping the tests for {self.year} {self.day:02} - part {part}")
 
         answer = part_func(read_input())
-        if answer == 0:
-            print(f"{CUE.FAIL} Answer of '{answer}' for {self.year} {self.day:02} - part {part} given. Auto exiting.")
+        if not isinstance(answer, int):
+            print(f"{CUE.FAIL} Real answer of '{answer}' is not an int, exiting.")
             return
 
-        print(f"{CUE.INFO} Sending answer of ({CUE.GREEN}{answer}{CUE.RESET}) for {self.year} {self.day:02} - part {part}\n")
+        if answer == 0:
+            print(f"{CUE.FAIL} Answer of '{answer}' for {self.year} " +
+                  f"{self.day:02} - part {part} given. Auto exiting.")
+            return
+
+        print(f"{CUE.INFO} Sending answer of ({CUE.GREEN}{answer}{CUE.RESET}) " +
+              f"for {self.year} {self.day:02} - part {part}\n")
 
         if check_if_old_answer(part, answer):
             print(f"{CUE.WARN} You already tried this answer!")
