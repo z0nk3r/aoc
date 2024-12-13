@@ -150,7 +150,7 @@ import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
-from lib import puzzle_setup, puzzle_run
+from lib import puzzle_run
 
 
 def part1(lines):
