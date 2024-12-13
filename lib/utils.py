@@ -146,15 +146,24 @@ def puzzle_setup():
     return aoc
 
 
-def puzzle_run(part1: Callable[[List[str]], int], part2: Callable[[List[str]], int]) -> None:
-    '''Runs a puzzle'''
+def puzzle_run(part1: Callable[[List[str]], int], part2: Callable[[List[str]], int], bypass:bool = False) -> None:
+    '''Runs a puzzle.
+    
+    Params:
+        part1: 
+            Function to call to solve part 1
+        part2: 
+            Function to call to solve part 2
+        bypass: 
+            Bypass the example testing if no examples are present in the puzzle description. Default: False
+    '''
     aoc = puzzle_setup()
 
     if not os.path.exists(".part1solved"):
-        aoc.eval_answer(part1, 1)
+        aoc.eval_answer(part1, 1, bypass)
 
     elif not os.path.exists(".part2solved"):
-        aoc.eval_answer(part2, 2)
+        aoc.eval_answer(part2, 2, bypass)
 
     else:
         print(f"{CUE.INFO} You already have all of the stars for {aoc}!")

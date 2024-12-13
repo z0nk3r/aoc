@@ -333,12 +333,15 @@ class AoCSession:
         return True
 
 
-    def eval_answer(self, part_func: Callable[[List[str]], int], part: int) -> None:
+    def eval_answer(self, part_func: Callable[[List[str]], int], part: int, bypass: bool) -> None:
         """Evaluates the provided answer. Auto submits answer, and evals if correct or incorrect"""
         print(f"{CUE.INFO} Solving Part {part} for {self.year} {self.day}")
 
-        if not self.pass_the_test(part_func):
-            return
+        if not bypass:
+            if not self.pass_the_test(part_func):
+                return
+        else:
+            print(f"{CUE.WARN} Skipping the tests for {self.year} {self.day:02} - part {part}")
 
         answer = part_func(read_input())
         if answer == 0:
