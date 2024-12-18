@@ -219,9 +219,10 @@ class AoCSession:
         url = f"https://adventofcode.com/{self.year}/day/{self.day}"
         webpage = self._get_request(url)
         if webpage is not None:
-            t_answers = re.findall(r"<code><em>(\d+)</em></code>", str(webpage))
+            t_answers = re.findall(r"<code><em>((\d+,?)+)</em></code>", str(webpage))
             with open(".test_answers", "w", encoding="utf-8") as testfile:
-                testfile.write('\n'.join(t_answers))
+                for t_ans in t_answers:
+                    testfile.write(f'{t_ans[0]}\n')
             return True
 
         return False
@@ -284,7 +285,7 @@ class AoCSession:
         return release_time - now
 
 
-    def submit_answer(self, part: int, answer: int) -> Tuple[bool, Union[str, None]]:
+    def submit_answer(self, part: int, answer: str) -> Tuple[bool, Union[str, None]]:
         """Submit an answer"""
 
         url = f"https://adventofcode.com/{self.year}/day/{self.day}/answer"
@@ -335,8 +336,8 @@ class AoCSession:
             return False
 
         answer = part_func(t_input)
-        if not isinstance(answer, int):
-            print(f"{CUE.FAIL} Test answer of '{answer}' is not an int, exiting.")
+        if answer is None:
+            print(f"{CUE.FAIL} Test answer of '{answer}' is None, exiting.")
             return False
 
         if not check_test_answer(answer):
@@ -359,8 +360,8 @@ class AoCSession:
             print(f"{CUE.WARN} Skipping the tests for {self.year} {self.day:02} - part {part}")
 
         answer = part_func(read_input())
-        if not isinstance(answer, int):
-            print(f"{CUE.FAIL} Real answer of '{answer}' is not an int, exiting.")
+        if answer is None:
+            print(f"{CUE.FAIL} Real answer of '{answer}' is None, exiting.")
             return
 
         if answer == 0:
