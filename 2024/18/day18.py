@@ -19,7 +19,7 @@ def valid_space(ridx, cidx, maze):
 
 def dijkstras(coords, size, start_idx, start, end):
     '''dijkstras w/ no weights (BFS)'''
-    
+
     # build and populate maze
     maze = [['.' for _ in range(size)] for _ in range(size)]
     for s_idx in range(start_idx):
@@ -106,6 +106,6 @@ def part2(coords):
 
 if __name__ == "__main__":
     try:
-        puzzle_run(part1, part2, True)
+        puzzle_run(part1, part2)
     except KeyboardInterrupt:
         print("")

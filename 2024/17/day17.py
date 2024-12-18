@@ -66,10 +66,7 @@ def part1(lines):
 
         eip += 2
 
-    given_answer = ','.join([str(char) for char in stdout])
-    test_answer = "4,6,3,5,6,3,5,2,1,0"
-    print(f"_{test_answer = }")
-    print(f"{given_answer = }")
+    answer = ','.join([str(char) for char in stdout])
     return answer
 
 
@@ -84,7 +81,7 @@ def recurs_pt2(progs, p_stack, total):
         regs['B'] = 0
         regs['C'] = 0
         target = None
-        
+
         for eip in range(0, len(progs) - 2, 2):
             opcode = progs[eip]
             operand = progs[eip + 1]
@@ -144,6 +141,6 @@ def part2(lines):
 
 if __name__ == "__main__":
     try:
-        puzzle_run(part1, part2, True)
+        puzzle_run(part1, part2)
     except KeyboardInterrupt:
         print("")
