@@ -91,7 +91,7 @@ def aoc_timeout(answer_line: str) -> None:
         print_countdown(timeout_seconds, "Timeout is Over")
 
 
-def check_if_old_answer(part: int, answer: int) -> bool:
+def check_if_old_answer(part: int, answer: str) -> bool:
     """Checks old answers if current answer has already been attempted"""
     filename = f".part{part}tries"
 
@@ -100,11 +100,11 @@ def check_if_old_answer(part: int, answer: int) -> bool:
 
     with open(filename, "r", encoding="utf-8") as gafile:
         lines = gafile.readlines()
-        given_answers = [int(line.replace("\n", "")) for line in lines]
+        given_answers = [line.replace("\n", "") for line in lines]
     return answer in given_answers
 
 
-def check_test_answer(answer: int) -> bool:
+def check_test_answer(answer: str) -> bool:
     """Checks test answers if current test answer is correct"""
     filename = ".test_answers"
 
@@ -113,7 +113,7 @@ def check_test_answer(answer: int) -> bool:
 
     with open(filename, "r", encoding="utf-8") as tfile:
         lines = tfile.readlines()
-        test_answers = [int(line.replace("\n", "")) for line in lines]
+        test_answers = [line.replace("\n", "") for line in lines]
     return answer in test_answers
 
 
