@@ -56,7 +56,13 @@ See below for an example of the general structure:
 ```
 
 ## Setup
-There are two setup steps required:
+The only 3rd party library needed is `html2text` for the html parsing upon submitting a non-passing solution.
+
+```shell
+$ pip install html2text
+```
+
+Additionally, there are two manual setup steps required:
 * Provide your username to include as part of the User-Agent in HTTP Requests, (`lib/username.txt`) 
 * Get your individual Advent of Code account cookie (`lib/cookie.txt`)
 
@@ -64,7 +70,7 @@ Typically, just run the Auto-Grabber. You will be auto-prompted to manually retr
 ```shell
     Enter your username for the User-Agent string (Will cache locally, should only have to do this once)
 
-    => 
+    [>] 
 ```
 
 ```shell
@@ -73,7 +79,7 @@ Typically, just run the Auto-Grabber. You will be auto-prompted to manually retr
     Chrome: Right-click Page > Inspect > Application > Storage > Cookies > https://adventofcode.com > Value
     (The cookie is a SHA-512, 128 chars long) (Cookie will Cache locally, should only have to do this once per login)
 
-    =>
+    [>]
 ```
 
 ## How to Use
@@ -92,7 +98,7 @@ will pull the puzzle input from the 1st of December, 2023 and place it in `./202
 If the year or day provided is in the future, a countdown will show instead:
 ```shell
 $> python3 aoc.py 2024 1
- [x]   10D, 05H, 14M, 15S until Puzzle is Available. Waiting... 
+  [x]   10D, 05H, 14M, 15S until Puzzle is Available. Waiting... 
 ```
 
 Once complete, you will be notified of the download of the puzzle input. If the download fails for any reason, an error will show and it will retry the download. If the download fails more than 5 times in a row, the script will exit, and you should try again later.
@@ -107,7 +113,7 @@ Using the `-a` option will automatically pull the current date and determine the
 ```shell
 $> python3 aoc.py -a
 [!] Auto-Grabber: Next Puzzle is 2024 01
- [x]   10D, 05H, 14M, 15S until Puzzle is Available. Waiting... 
+  [x]   10D, 05H, 14M, 15S until Puzzle is Available. Waiting... 
 ```
 
 ### Workflow
