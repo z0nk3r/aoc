@@ -340,6 +340,7 @@ class AoCSession:
             print(f"{CUE.FAIL} Test answer of '{answer}' is None, exiting.")
             return False
 
+        answer = str(answer)
         if not check_test_answer(answer):
             print(f"  {CUE.FAIL} Test answer '{answer}' is incorrect. Try again.")
             return False
@@ -372,6 +373,7 @@ class AoCSession:
         print(f"{CUE.INFO} Sending answer of ({CUE.GREEN}{answer}{CUE.RESET}) " +
               f"for {self.year} {self.day:02} - part {part}\n")
 
+        answer = str(answer)
         if check_if_old_answer(part, answer):
             print(f"{CUE.WARN} You already tried this answer!")
             return
