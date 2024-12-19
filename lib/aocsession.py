@@ -11,6 +11,7 @@ from typing import Callable, List, Tuple, Union
 
 import dateutil.tz
 import requests
+import html2text
 
 from .utils import (CUE, add_to_answers, aoc_timeout, check_if_old_answer,
                     check_test_answer, print_countdown, read_input)
@@ -340,16 +341,22 @@ class AoCSession:
             print(f"{CUE.FAIL} Test answer of '{answer}' is None, exiting.")
             return False
 
+        if answer == 0:
+            print(f"{CUE.FAIL} Fall-through test answer ({CUE.RED}{answer}{CUE.RESET}) " +
+                  "given. Auto exiting.")
+            return False
+
         answer = str(answer)
         if not check_test_answer(answer):
-            print(f"  {CUE.FAIL} Test answer '{answer}' is incorrect. Try again.")
+            print(f"  {CUE.FAIL} Test answer ({CUE.RED}{answer}{CUE.RESET}) is incorrect.")
             return False
 
         print(f"  {CUE.GOOD} Test solution passed! ({CUE.CYAN}{answer}{CUE.RESET})")
         return True
 
 
-    def eval_answer(self, part_func: Callable[[List[str]], int], part: int, bypass: bool) -> None:
+    def eval_answer(self, part_func: Callable[[List[str]], int], 
+                    part: int, bypass: bool, refactor: bool) -> None:
         """Evaluates the provided answer. Auto submits answer, and evals if correct or incorrect"""
         print(f"{CUE.INFO} Solving Part {part} for {self.year} {self.day}")
 
@@ -366,31 +373,37 @@ class AoCSession:
             return
 
         if answer == 0:
-            print(f"{CUE.FAIL} Answer of '{answer}' for {self.year} " +
-                  f"{self.day:02} - part {part} given. Auto exiting.")
+            print(f"{CUE.FAIL} Fall-through real answer ({CUE.RED}{answer}{CUE.RESET}) " +
+                  "given. Auto exiting.")
+            return
+
+        answer = str(answer)
+        if check_if_old_answer(part, answer):
+            print(f"{CUE.WARN} You already tried this answer! ({CUE.YELLOW}{answer}{CUE.RESET})")
+            return
+
+        if refactor:
+            print(f"{CUE.FAIL} New answer provided on retry ({CUE.RED}{answer}{CUE.RESET}).")
             return
 
         print(f"{CUE.INFO} Sending answer of ({CUE.GREEN}{answer}{CUE.RESET}) " +
               f"for {self.year} {self.day:02} - part {part}\n")
 
-        answer = str(answer)
-        if check_if_old_answer(part, answer):
-            print(f"{CUE.WARN} You already tried this answer!")
-            return
-
         b_submit, response = self.submit_answer(part, answer)
         if b_submit:
             add_to_answers(part, answer)
             os.system(f"touch .part{part}solved")
+            os.system(f"date >> .part{part}solved")
             print(f"{CUE.GOOD} {part}. {answer} - Correct! {'⭐' * int(part)}")
         else:
             if "already complete it" in response:
                 os.system(f"touch .part{part}solved")
+                os.system(f"date >> .part{part}solved")
                 print(f"{CUE.GOOD} You already have this star! {'⭐' * int(part)}")
             else:
                 add_to_answers(part, answer)
                 print(f"{CUE.FAIL} {part} - {answer} was incorrect.")
-                print(f"{response = }")
+                print(html2text.html2text(response))
                 aoc_timeout(response)
                 print("\n")
 

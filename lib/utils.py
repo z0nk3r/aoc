@@ -165,7 +165,7 @@ def puzzle_setup():
 
 def puzzle_run(part1: Callable[[List[str]], int],
                part2: Callable[[List[str]], int],
-               bypass:bool = False) -> None:
+               bypass: bool = False, refactor: bool = False) -> None:
     '''Runs a puzzle.
 
     Params:
@@ -176,14 +176,21 @@ def puzzle_run(part1: Callable[[List[str]], int],
         bypass:
             Bypass the example testing if no examples are present in the puzzle description.
                 Default: False
+        refactor:
+            Retries a puzzle solution without sending the answer to the AoC website.
+            Primarily used for after-solve refactoring, as the passing answer would be cached.
+            Setting refactor without solving a part will run the previous part automatically.
+                Default: False
     '''
     aoc = puzzle_setup()
+    part1solved = os.path.exists(".part1solved")
+    part2solved = os.path.exists(".part2solved")
 
-    if not os.path.exists(".part1solved"):
-        aoc.eval_answer(part1, 1, bypass)
+    if (refactor and part1solved and not part2solved) or not part1solved:
+        aoc.eval_answer(part1, 1, bypass, refactor)
 
-    elif not os.path.exists(".part2solved"):
-        aoc.eval_answer(part2, 2, bypass)
+    elif (refactor and part2solved) or not part2solved:
+        aoc.eval_answer(part2, 2, bypass, refactor)
 
     else:
         print(f"{CUE.INFO} You already have all of the stars for {aoc}!")
