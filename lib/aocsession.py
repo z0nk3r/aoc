@@ -360,7 +360,6 @@ class AoCSession:
         """Evaluates the provided answer. Auto submits answer, and evals if correct or incorrect"""
         print(f"{CUE.INFO} Solving Part {part} for {self.year} {self.day}")
 
-
         if not bypass:
             if not self.pass_the_test(part_func):
                 return
@@ -389,23 +388,34 @@ class AoCSession:
         print(f"{CUE.INFO} Sending answer of ({CUE.GREEN}{answer}{CUE.RESET}) " +
               f"for {self.year} {self.day:02} - part {part}\n")
 
+        solved = False
         b_submit, response = self.submit_answer(part, answer)
         if b_submit:
             add_to_answers(part, answer)
-            os.system(f"touch .part{part}solved")
-            os.system(f"date >> .part{part}solved")
+            solved = True
             print(f"{CUE.GOOD} {part}. {answer} - Correct! {'⭐' * int(part)}")
         else:
             if "already complete it" in response:
-                os.system(f"touch .part{part}solved")
-                os.system(f"date >> .part{part}solved")
+                solved = True
                 print(f"{CUE.GOOD} You already have this star! {'⭐' * int(part)}")
             else:
                 add_to_answers(part, answer)
                 print(f"{CUE.FAIL} {part} - {answer} was incorrect.")
-                print(html2text.html2text(response))
+                h = html2text.HTML2Text()
+                h.ignore_links = True
+                t_width, _ = os.get_terminal_size()
+                h.body_width = int(t_width * 0.80)
+                print(h.handle(response), end='')
                 aoc_timeout(response)
                 print("\n")
+        
+        if solved:
+            curr_time = datetime.datetime.now()
+            dateformat = "%a %b %d %Y @ %T.%f EST"
+            os.system(f"touch .part{part}solved")
+            with open(f".part{part}solved", "a", encoding="utf-8") as solve_file:
+                solve_file.write(curr_time.strftime(dateformat))
+                solve_file.write(f" (@{curr_time.timestamp()})\n")
 
 
     def __str__(self):
