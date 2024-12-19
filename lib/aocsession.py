@@ -334,6 +334,8 @@ class AoCSession:
         t_input = read_input("test")
         if t_input == [""]:
             print(f"  {CUE.FAIL} 'test' data file does not exist. Re-get it and try again.")
+            print(f"  {CUE.INFO} If no tests exist for current puzzle, set 'bypass=True' in " +
+                  "your 'puzzle_run()' parameters.")
             return False
 
         answer = part_func(t_input)
