@@ -101,7 +101,8 @@ def check_if_old_answer(part: int, answer: str) -> bool:
     with open(filename, "r", encoding="utf-8") as gafile:
         lines = gafile.readlines()
         given_answers = [line.replace("\n", "") for line in lines]
-    return answer in given_answers
+
+    return str(answer) in given_answers
 
 
 def check_test_answer(answer: str) -> bool:
@@ -114,7 +115,8 @@ def check_test_answer(answer: str) -> bool:
     with open(filename, "r", encoding="utf-8") as tfile:
         lines = tfile.readlines()
         test_answers = [line.replace("\n", "") for line in lines]
-    return answer in test_answers
+
+    return str(answer) in test_answers
 
 
 def add_to_answers(part: int, answer: int) -> None:
