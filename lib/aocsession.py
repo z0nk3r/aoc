@@ -220,7 +220,7 @@ class AoCSession:
         url = f"https://adventofcode.com/{self.year}/day/{self.day}"
         webpage = self._get_request(url)
         if webpage is not None:
-            t_answers = re.findall(r"<code><em>((\d+,?)+)</em></code>", str(webpage))
+            t_answers = re.findall(r"<code><em>(([\d|a-z]+,?)+)</em></code>", str(webpage))
             with open(".test_answers", "w", encoding="utf-8") as testfile:
                 for t_ans in t_answers:
                     testfile.write(f'{t_ans[0]}\n')
