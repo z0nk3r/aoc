@@ -46,18 +46,7 @@ part1 (FILE *fp_input)
 {
     int32_t p1_retval = 0;
 
-    int32_t chr = 0;
-    while ((chr = fgetc(fp_input)) != EOF)
-    {
-        if ('(' == chr)
-        {
-            p1_retval++;
-        }
-        else if (')' == chr)
-        {
-            p1_retval--;
-        }
-    }
+    // solve part 1 of the problem here
 
     info("Part 1 Results: %d\n", p1_retval);
     return p1_retval;
@@ -67,28 +56,8 @@ static int32_t
 part2 (FILE *fp_input)
 {
     int32_t p2_retval = 0;
-    int32_t floor_ctr = 0;
-    int32_t iter_ctr  = 0;
 
-    int32_t chr = 0;
-    while ((chr = fgetc(fp_input)) != EOF)
-    {
-        if ('(' == chr)
-        {
-            floor_ctr++;
-        }
-        else if (')' == chr)
-        {
-            floor_ctr--;
-        }
-
-        iter_ctr++;
-        if (-1 == floor_ctr)
-        {
-            p2_retval = iter_ctr;
-            break;
-        }
-    }
+    // solve part 2 of the problem here
 
     info("Part 2 Results: %d\n", p2_retval);
     return p2_retval;
