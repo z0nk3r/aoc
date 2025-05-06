@@ -12,47 +12,47 @@ Additionally, the provided `template.py` (see below), will auto copy down into t
 See below for an example of the general structure:
 ```shell
 .
-├── 2023
-│   ├── 01
-│   │   ├── input
-│   │   └── treb.py
-│   ├── 02
-│   │   ├── cubes.py
-│   │   ├── cubes_smol.py
-│   │   └── input
-│   ├── 03
-│   │   ├── smol
-│   │   ├── gears.py
-│   │   ├── gears_smol.py
-│   │   └── input
-│   ├── 04
-│   │   └── input
+|-- 2023
+|   |-- 01
+|   |   |--- input
+|   |   \-- treb.py
+|   |-- 02
+|   |   |--- cubes.py
+|   |   |--- cubes_smol.py
+|   |   \-- input
+|   |-- 03
+|   |   |--- smol
+|   |   |--- gears.py
+|   |   |--- gears_smol.py
+|   |   \-- input
+|   |-- 04
+|   |   \-- input
 
   // ~~~~~ //
 
-│   ├── 23
-│   ├── 24
-│   └── 25
-├── 2024
-│   ├── 01
-│   ├── 02
-│   ├── 03
-│   ├── 04
+|   |--- 23
+|   |--- 24
+|   \-- 25
+|-- 2024
+|   |--- 01
+|   |--- 02
+|   |--- 03
+|   |--- 04
 
   // ~~~~~ //
 
-│   ├── 22
-│   ├── 23
-│   ├── 24
-│   └── 25
-├── aoc.py
-├── lib
-│   ├── __init__.py
-│   ├── cookie.txt
-│   ├── username.txt
-│   └── utils.py
-├── README.md
-└── template.py
+|   |--- 22
+|   |--- 23
+|   |--- 24
+|   \-- 25
+|-- aoc.py
+|-- lib
+|   |--- __init__.py
+|   |--- cookie.txt
+|   |--- username.txt
+|   \-- utils.py
+|-- README.md
+\-- template.py
 ```
 
 ## Setup
