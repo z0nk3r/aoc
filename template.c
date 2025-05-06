@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #define FILENAME "input"
 
@@ -39,7 +40,6 @@ main (int argc, char **argv)
 // =============================================================================
 //                               STATIC FUNCTIONS
 // =============================================================================
-
 
 static int32_t
 part1 (FILE *fp_input)
