@@ -9,6 +9,7 @@ from hashlib import md5
 def part1(lines):
     '''Function to solve part 1'''
     answer = 0
+
     key = lines[0]
     key_idx = 0
     while True:
@@ -26,7 +27,6 @@ def part2(lines):
     '''Function to solve part 2'''
     answer = 0
 
-    answer = 0
     key = lines[0]
     key_idx = 0
     while True:
